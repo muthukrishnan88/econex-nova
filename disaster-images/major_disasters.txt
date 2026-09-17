@@ -1,0 +1,28 @@
+1. Indian Ocean Earthquake and Tsunami
+   Type: Earthquake / Tsunami
+   Date: 2004-12-26
+   Location: Aceh, Indonesia and Indian Ocean region
+   Coordinates: 3.3167, 95.6167
+   A massive undersea earthquake triggered a destructive tsunami across countries bordering the Indian Ocean.
+
+2. Hurricane Katrina
+   Type: Hurricane / Flood
+   Date: 2005-08-29
+   Location: New Orleans, Louisiana, USA
+   Coordinates: 29.9511, -90.0715
+   A major hurricane caused catastrophic flooding and widespread damage along the U.S. Gulf Coast, especially in New Orleans.
+
+3. Gorkha Earthquake
+   Type: Earthquake
+   Date: 2015-04-25
+   Location: Gorkha District, Nepal
+   Coordinates: 28.0, 84.6333
+   A magnitude 7.8 earthquake struck Nepal, causing severe destruction and landslides across the region.
+
+4. Turkey–Syria Earthquake
+   Type: Earthquake
+   Date: 2023-02-06
+   Location: Kahramanmaras, Türkiye and northwestern Syria
+   Coordinates: 37.5753, 36.9228
+   A sequence of powerful earthquakes caused extensive destruction across southern Türkiye and northwestern Syria.
+

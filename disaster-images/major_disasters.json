@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "disaster": "Indian Ocean Earthquake and Tsunami",
+    "type": "Earthquake / Tsunami",
+    "date": "2004-12-26",
+    "location": "Aceh, Indonesia and Indian Ocean region",
+    "country": "Indonesia",
+    "latitude": 3.3167,
+    "longitude": 95.6167,
+    "description": "A massive undersea earthquake triggered a destructive tsunami across countries bordering the Indian Ocean."
+  },
+  {
+    "id": 2,
+    "disaster": "Hurricane Katrina",
+    "type": "Hurricane / Flood",
+    "date": "2005-08-29",
+    "location": "New Orleans, Louisiana, USA",
+    "country": "United States",
+    "latitude": 29.9511,
+    "longitude": -90.0715,
+    "description": "A major hurricane caused catastrophic flooding and widespread damage along the U.S. Gulf Coast, especially in New Orleans."
+  },
+  {
+    "id": 3,
+    "disaster": "Gorkha Earthquake",
+    "type": "Earthquake",
+    "date": "2015-04-25",
+    "location": "Gorkha District, Nepal",
+    "country": "Nepal",
+    "latitude": 28.0,
+    "longitude": 84.6333,
+    "description": "A magnitude 7.8 earthquake struck Nepal, causing severe destruction and landslides across the region."
+  },
+  {
+    "id": 4,
+    "disaster": "Turkey–Syria Earthquake",
+    "type": "Earthquake",
+    "date": "2023-02-06",
+    "location": "Kahramanmaras, Türkiye and northwestern Syria",
+    "country": "Türkiye / Syria",
+    "latitude": 37.5753,
+    "longitude": 36.9228,
+    "description": "A sequence of powerful earthquakes caused extensive destruction across southern Türkiye and northwestern Syria."
+  }
+]
