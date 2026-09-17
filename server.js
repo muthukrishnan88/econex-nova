@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import multer from "multer";
 import OpenAI from "openai";
 import dns from "node:dns/promises";
 import net from "node:net";
@@ -19,6 +20,7 @@ const openai = OPENAI_API_KEY
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
+app.use(express.static('.'));
 
 /* =========================================================
    URL NORMALIZATION
@@ -2710,6 +2712,323 @@ function buildScoreExplanation(
 }
 
 /* =========================================================
+   IMAGE UPLOAD CONFIGURATION
+========================================================= */
+
+const storage = multer.memoryStorage();
+
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024 // 10 MB
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = [
+            "image/jpeg",
+            "image/jpg",
+            "image/png"
+        ];
+
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(
+                new Error(
+                    "Unsupported file type. Only JPG, JPEG, and PNG are allowed."
+                )
+            );
+        }
+    }
+});
+
+/* =========================================================
+   IMAGE VERIFICATION PROVIDER
+========================================================= */
+
+async function verifyImageAuthenticity(imageBuffer, mimeType) {
+    const isDevelopmentMode = !process.env.AI_DETECTOR_API_KEY;
+
+    if (isDevelopmentMode) {
+        const random = Math.random();
+
+        if (random < 0.6) {
+            return {
+                imageType: "original",
+                confidence: Math.floor(85 + Math.random() * 10),
+                accepted: true,
+                message: "Original photo accepted.",
+                isDevelopmentMode: true
+            };
+        } else if (random < 0.8) {
+            return {
+                imageType: "uncertain",
+                confidence: Math.floor(45 + Math.random() * 15),
+                accepted: false,
+                message: "The image could not be verified confidently. Please upload a clear original environmental photo.",
+                isDevelopmentMode: true
+            };
+        } else {
+            return {
+                imageType: "ai_generated",
+                confidence: Math.floor(80 + Math.random() * 15),
+                accepted: false,
+                message: "AI-generated image detected. Please upload an original environmental photo.",
+                isDevelopmentMode: true
+            };
+        }
+    }
+
+    throw new Error("Production AI detector not configured");
+}
+
+/* =========================================================
+   WASTE ANALYSIS PROVIDER
+========================================================= */
+
+async function analyzeWasteWithAI(imageBuffer, mimeType) {
+    if (!openai) {
+        return {
+            objects: [
+                {
+                    name: "Plastic bottle",
+                    material: "PET",
+                    quantity: 2,
+                    quantityConfidence: 88,
+                    estimatedWeightGrams: 60,
+                    weightConfidence: 62,
+                    biodegradable: false,
+                    recyclable: true,
+                    recyclabilityScore: 92,
+                    environmentalImpact: "PET plastic can persist in the environment for hundreds of years if not recycled properly.",
+                    recyclingMethod: "Clean and separate PET bottles, then deposit at recycling collection points. Check for recycling symbol #1."
+                },
+                {
+                    name: "Aluminium can",
+                    material: "Aluminium",
+                    quantity: 1,
+                    quantityConfidence: 94,
+                    estimatedWeightGrams: 15,
+                    weightConfidence: 70,
+                    biodegradable: false,
+                    recyclable: true,
+                    recyclabilityScore: 98,
+                    environmentalImpact: "Aluminium mining has high environmental cost, but aluminium is infinitely recyclable.",
+                    recyclingMethod: "Rinse and flatten cans. Recycling aluminium saves 95% of energy compared to producing new aluminium."
+                }
+            ],
+            greenImpactScore: 85,
+            impactExplanation: "The detected waste items are highly recyclable when properly sorted and cleaned.",
+            actionPlan: [
+                "Separate recyclable materials by type.",
+                "Rinse containers to remove residue.",
+                "Check local recycling guidelines for accepted materials.",
+                "Drop off at designated recycling collection points."
+            ],
+            isDevelopmentMode: true
+        };
+    }
+
+    const base64Image = imageBuffer.toString("base64");
+    const dataUrl = `data:${mimeType};base64,${base64Image}`;
+
+    try {
+        const response = await openai.chat.completions.create({
+            model: OPENAI_MODEL || "gpt-4o",
+            messages: [
+                {
+                    role: "system",
+                    content: `You are an expert environmental waste analyzer. Analyze images and identify waste objects with their properties.
+
+Return a JSON object with this exact structure:
+{
+  "objects": [
+    {
+      "name": "object name",
+      "material": "one of: Plastic, PET, HDPE, Paper, Cardboard, Glass, Aluminium, Steel, Iron, Copper, E-Waste, Electronics, Battery, Textile, Wood, Food/Organic, Rubber, Mixed Waste, Hazardous Waste, Other, Unknown",
+      "quantity": number,
+      "quantityConfidence": 0-100,
+      "estimatedWeightGrams": number (ESTIMATED weight, not measured),
+      "weightConfidence": 0-100,
+      "biodegradable": boolean,
+      "recyclable": boolean,
+      "recyclabilityScore": 0-100,
+      "environmentalImpact": "brief impact description",
+      "recyclingMethod": "how to recycle or dispose properly"
+    }
+  ],
+  "greenImpactScore": 0-100,
+  "impactExplanation": "overall environmental impact summary",
+  "actionPlan": ["step 1", "step 2", "step 3"]
+}
+
+Return ONLY valid JSON. No markdown, no code blocks, no explanations.`
+                },
+                {
+                    role: "user",
+                    content: [
+                        {
+                            type: "text",
+                            text: "Analyze this image for environmental waste. Identify all waste objects and provide detailed recycling information."
+                        },
+                        {
+                            type: "image_url",
+                            image_url: {
+                                url: dataUrl
+                            }
+                        }
+                    ]
+                }
+            ],
+            max_tokens: 2000,
+            temperature: 0.3
+        });
+
+        const content = response.choices[0]?.message?.content;
+
+        if (!content) {
+            throw new Error("No response from AI");
+        }
+
+        const result = JSON.parse(content);
+        result.isDevelopmentMode = false;
+
+        return result;
+    } catch (error) {
+        console.error("Waste analysis error:", error.message);
+
+        return {
+            objects: [
+                {
+                    name: "Unidentified waste",
+                    material: "Unknown",
+                    quantity: 1,
+                    quantityConfidence: 40,
+                    estimatedWeightGrams: 100,
+                    weightConfidence: 30,
+                    biodegradable: false,
+                    recyclable: false,
+                    recyclabilityScore: 0,
+                    environmentalImpact: "Unable to determine specific environmental impact.",
+                    recyclingMethod: "Consult local waste management guidelines."
+                }
+            ],
+            greenImpactScore: 50,
+            impactExplanation: "Analysis unavailable. Please try again with a clearer image.",
+            actionPlan: [
+                "Separate waste by type.",
+                "Consult local waste management guidelines."
+            ],
+            isDevelopmentMode: true,
+            error: error.message
+        };
+    }
+}
+
+/* =========================================================
+   POLLUTION ANALYSIS PROVIDER
+========================================================= */
+
+async function analyzePollutionWithAI(imageBuffer, mimeType) {
+    if (!openai) {
+        return {
+            pollutionType: "Plastic Pollution",
+            severity: "Moderate",
+            severityScore: 62,
+            detectedEvidence: [
+                "Scattered plastic waste",
+                "Non-biodegradable materials",
+                "Visible environmental contamination"
+            ],
+            environmentalImpact: "Plastic pollution can harm wildlife and contaminate ecosystems. Microplastics can enter food chains.",
+            recommendedActions: [
+                "Organize community cleanup event",
+                "Report to local environmental authorities",
+                "Set up waste collection infrastructure",
+                "Educate community about proper waste disposal"
+            ],
+            urgency: "Medium",
+            isDevelopmentMode: true
+        };
+    }
+
+    const base64Image = imageBuffer.toString("base64");
+    const dataUrl = `data:${mimeType};base64,${base64Image}`;
+
+    try {
+        const response = await openai.chat.completions.create({
+            model: OPENAI_MODEL || "gpt-4o",
+            messages: [
+                {
+                    role: "system",
+                    content: `You are an expert environmental pollution analyst. Analyze images and identify pollution with detailed assessment.
+
+Pollution categories: Air Pollution, Water Pollution, Plastic Pollution, Land Pollution, Garbage Dumping, Smoke, Industrial Pollution, Oil Contamination, Sewage, Waste Burning, Littering, Other
+
+Return a JSON object with this exact structure:
+{
+  "pollutionType": "primary pollution category",
+  "severity": "one of: Low, Moderate, High, Severe, Critical",
+  "severityScore": 0-100,
+  "detectedEvidence": ["evidence 1", "evidence 2"],
+  "environmentalImpact": "detailed impact description",
+  "recommendedActions": ["action 1", "action 2", "action 3"],
+  "urgency": "one of: Low, Medium, High, Critical"
+}
+
+Return ONLY valid JSON. No markdown, no code blocks, no explanations.`
+                },
+                {
+                    role: "user",
+                    content: [
+                        {
+                            type: "text",
+                            text: "Analyze this image for environmental pollution. Identify pollution type, severity, and provide actionable recommendations."
+                        },
+                        {
+                            type: "image_url",
+                            image_url: {
+                                url: dataUrl
+                            }
+                        }
+                    ]
+                }
+            ],
+            max_tokens: 1500,
+            temperature: 0.3
+        });
+
+        const content = response.choices[0]?.message?.content;
+
+        if (!content) {
+            throw new Error("No response from AI");
+        }
+
+        const result = JSON.parse(content);
+        result.isDevelopmentMode = false;
+
+        return result;
+    } catch (error) {
+        console.error("Pollution analysis error:", error.message);
+
+        return {
+            pollutionType: "Unknown Pollution",
+            severity: "Unknown",
+            severityScore: 50,
+            detectedEvidence: ["Unable to analyze"],
+            environmentalImpact: "Analysis unavailable. Please try again with a clearer image.",
+            recommendedActions: [
+                "Contact local environmental authorities",
+                "Document the pollution",
+                "Avoid direct contact"
+            ],
+            urgency: "Unknown",
+            isDevelopmentMode: true,
+            error: error.message
+        };
+    }
+}
+
+/* =========================================================
    HEALTH
 ========================================================= */
 
@@ -3200,6 +3519,164 @@ app.use(
 );
 
 /* =========================================================
+   IMAGE VERIFICATION ENDPOINT
+========================================================= */
+
+app.post(
+    "/api/image/verify",
+    upload.single("image"),
+    async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({
+                    success: false,
+                    error: "No image file provided."
+                });
+            }
+
+            const { buffer, mimetype, size } = req.file;
+
+            if (size > 10 * 1024 * 1024) {
+                return res.status(400).json({
+                    success: false,
+                    error: "File size exceeds 10 MB limit."
+                });
+            }
+
+            const result = await verifyImageAuthenticity(buffer, mimetype);
+
+            res.json({
+                success: true,
+                ...result
+            });
+
+        } catch (error) {
+            console.error("Verification error:", error.message);
+
+            res.status(500).json({
+                success: false,
+                error: error.message || "Image verification failed."
+            });
+        }
+    }
+);
+
+/* =========================================================
+   WASTE ANALYSIS ENDPOINT
+========================================================= */
+
+app.post(
+    "/api/waste/analyze",
+    upload.single("image"),
+    async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({
+                    success: false,
+                    error: "No image file provided."
+                });
+            }
+
+            const { buffer, mimetype, size } = req.file;
+
+            if (size > 10 * 1024 * 1024) {
+                return res.status(400).json({
+                    success: false,
+                    error: "File size exceeds 10 MB limit."
+                });
+            }
+
+            const result = await analyzeWasteWithAI(buffer, mimetype);
+
+            res.json({
+                success: true,
+                ...result
+            });
+
+        } catch (error) {
+            console.error("Waste analysis error:", error.message);
+
+            res.status(500).json({
+                success: false,
+                error: error.message || "Waste analysis failed."
+            });
+        }
+    }
+);
+
+/* =========================================================
+   POLLUTION ANALYSIS ENDPOINT
+========================================================= */
+
+app.post(
+    "/api/pollution/analyze",
+    upload.single("image"),
+    async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({
+                    success: false,
+                    error: "No image file provided."
+                });
+            }
+
+            const { buffer, mimetype, size } = req.file;
+
+            if (size > 10 * 1024 * 1024) {
+                return res.status(400).json({
+                    success: false,
+                    error: "File size exceeds 10 MB limit."
+                });
+            }
+
+            const result = await analyzePollutionWithAI(buffer, mimetype);
+
+            res.json({
+                success: true,
+                ...result
+            });
+
+        } catch (error) {
+            console.error("Pollution analysis error:", error.message);
+
+            res.status(500).json({
+                success: false,
+                error: error.message || "Pollution analysis failed."
+            });
+        }
+    }
+);
+
+/* =========================================================
+   MULTER ERROR HANDLING
+========================================================= */
+
+app.use((error, req, res, next) => {
+    if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+            return res.status(400).json({
+                success: false,
+                error: "File size exceeds 10 MB limit."
+            });
+        }
+
+        return res.status(400).json({
+            success: false,
+            error: error.message
+        });
+    }
+
+    if (error.message) {
+        return res.status(400).json({
+            success: false,
+            error: error.message
+        });
+    }
+
+    next(error);
+});
+
+/* =========================================================
    GENERAL ERROR
 ========================================================= */
 
@@ -3233,7 +3710,7 @@ app.listen(
         );
 
         console.log(
-            "SAFNEX NOVA LINK ANALYZER"
+            "ECONEX NOVA • Unified Server"
         );
 
         console.log(
@@ -3249,14 +3726,59 @@ app.listen(
         );
 
         console.log(
-            `Analyze: POST http://localhost:${PORT}/api/analyze`
+            ""
         );
 
         console.log(
-            `AI configured: ${Boolean(
-                openai &&
-                OPENAI_MODEL
-            )}`
+            "Link Analyzer:"
+        );
+
+        console.log(
+            `  POST http://localhost:${PORT}/api/analyze`
+        );
+
+        console.log(
+            ""
+        );
+
+        console.log(
+            "Image Analysis:"
+        );
+
+        console.log(
+            `  POST http://localhost:${PORT}/api/image/verify`
+        );
+
+        console.log(
+            `  POST http://localhost:${PORT}/api/waste/analyze`
+        );
+
+        console.log(
+            `  POST http://localhost:${PORT}/api/pollution/analyze`
+        );
+
+        console.log(
+            ""
+        );
+
+        console.log(
+            "Web UI:"
+        );
+
+        console.log(
+            `  http://localhost:${PORT}/image.html`
+        );
+
+        console.log(
+            `  http://localhost:${PORT}/home.html`
+        );
+
+        console.log(
+            ""
+        );
+
+        console.log(
+            `AI: ${Boolean(openai && OPENAI_MODEL) ? "OpenAI configured" : "Development mode"}`
         );
 
         console.log(
