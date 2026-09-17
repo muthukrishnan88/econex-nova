@@ -18,9 +18,9 @@ const app = express();
 
 app.use(corsMiddleware);
 
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "150mb" }));
 
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "150mb" }));
 
 // Serve frontend static files from ai-main folder (single server solution)
 const frontendPath = path.join(__dirname, "../../ai-main");
