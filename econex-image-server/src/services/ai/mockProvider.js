@@ -124,12 +124,74 @@ export class MockAIProvider {
         const scenarios = this._getPollutionScenarios();
         const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
 
+        // Add authenticity check
+        const authenticity = this._generateAuthenticity();
+
+        // Add scene description
+        const scene = {
+            description: scenario.sceneDescription || "Environmental scene with visible pollution indicators.",
+            imageQuality: 75 + Math.floor(Math.random() * 20)
+        };
+
         return {
-            ...scenario,
+            success: true,
+            analysisMode: "AI",
+            authenticity,
+            scene,
+            pollution: scenario.pollution,
+            healthImpact: scenario.healthImpact,
+            environmentalImpact: scenario.environmentalImpact,
+            pollutionPathway: scenario.pollutionPathway,
+            reductionPlan: scenario.reductionPlan,
+            preventionPlan: scenario.preventionPlan,
+            actionPriority: scenario.actionPriority,
+            measurement: {
+                available: false,
+                message: "Pollutant concentrations cannot be measured from this image alone. Connect a compatible air-quality sensor or API for real-time measurements."
+            },
+            limitations: [
+                "Image analysis cannot directly measure pollutant concentration.",
+                "Source attribution may be uncertain without additional context.",
+                "Actual health and environmental risk depends on pollutant concentration, exposure duration, and local conditions.",
+                "Visual evidence may not capture all pollution sources in the area."
+            ],
             isDevelopmentMode: true,
             demo: true,
-            note: "Development Mode: This is simulated analysis. Connect AWS Bedrock for real pollution detection."
+            note: "Development Mode: This is simulated analysis. Connect AWS Bedrock with vision capabilities for real pollution detection."
         };
+    }
+
+    _generateAuthenticity() {
+        const random = Math.random();
+
+        if (random < 0.75) {
+            return {
+                classification: "original_likely",
+                confidence: 85 + Math.floor(Math.random() * 12),
+                aiGeneratedLikelihood: Math.floor(Math.random() * 10),
+                manipulationLikelihood: Math.floor(Math.random() * 15),
+                provenance: "not_available",
+                message: "Image appears to be an original photograph. Metadata not available for verification."
+            };
+        } else if (random < 0.85) {
+            return {
+                classification: "uncertain",
+                confidence: 45 + Math.floor(Math.random() * 20),
+                aiGeneratedLikelihood: 30 + Math.floor(Math.random() * 25),
+                manipulationLikelihood: 25 + Math.floor(Math.random() * 20),
+                provenance: "not_available",
+                message: "Image authenticity could not be determined with high confidence. Proceeding with visual analysis."
+            };
+        } else {
+            return {
+                classification: "ai_generated_or_manipulated",
+                confidence: 70 + Math.floor(Math.random() * 20),
+                aiGeneratedLikelihood: 65 + Math.floor(Math.random() * 25),
+                manipulationLikelihood: 55 + Math.floor(Math.random() * 30),
+                provenance: "not_available",
+                message: "Image shows indicators consistent with AI generation or significant manipulation. Note: AI-generated images can still represent real-world concepts, but origin verification is not possible."
+            };
+        }
     }
 
     _getWasteScenarios() {
@@ -604,87 +666,432 @@ export class MockAIProvider {
 
     _getPollutionScenarios() {
         return [
+            // Scenario 1: Open Waste Burning - Air Pollution
             {
-                pollutionType: "Plastic Pollution",
-                category: "Plastic Pollution",
-                severity: "Moderate",
-                severityScore: 65,
-                confidence: 72,
-                description: "Visible plastic waste accumulation including bottles, bags, and containers scattered in the environment.",
-                detectedEvidence: [
-                    "Scattered plastic bottles and containers",
-                    "Non-biodegradable materials in natural environment",
-                    "Potential for microplastic generation",
-                    "Wildlife interaction risk"
+                sceneDescription: "Outdoor scene with visible smoke and burning waste materials",
+                pollution: {
+                    primaryType: "air_pollution",
+                    primarySubtype: "open_waste_burning",
+                    confidence: 89,
+                    secondaryTypes: ["land_pollution"],
+                    visualEvidence: [
+                        "Dense smoke plume visible rising from ground level",
+                        "Active burning with visible flames",
+                        "Mixed waste materials near fire",
+                        "Dark particulate-laden smoke",
+                        "Affected area visible around burn site"
+                    ],
+                    likelySources: [
+                        {
+                            source: "Open waste burning",
+                            confidence: 84,
+                            evidence: "Visible fire beneath smoke plume with apparent mixed waste materials"
+                        }
+                    ],
+                    potentialPollutants: [
+                        "Particulate matter (PM2.5 and PM10)",
+                        "Carbon monoxide (CO)",
+                        "Volatile organic compounds (VOCs)",
+                        "Polycyclic aromatic hydrocarbons (PAHs)",
+                        "Dioxins (if plastic burned)",
+                        "Other combustion-related pollutants"
+                    ],
+                    concernScore: 82,
+                    concernLevel: "high"
+                },
+                healthImpact: {
+                    summary: "Open waste burning releases harmful pollutants that can affect respiratory and cardiovascular health, particularly with sufficient concentration or prolonged exposure.",
+                    possibleEffects: [
+                        "Eye, nose, and throat irritation",
+                        "Respiratory irritation and coughing",
+                        "Aggravation of asthma and other respiratory conditions",
+                        "Reduced lung function with prolonged exposure",
+                        "Cardiovascular effects from long-term exposure to particulate matter",
+                        "Increased health risks for children, elderly, and those with pre-existing conditions"
+                    ],
+                    note: "Actual health risk depends on pollutant concentration, exposure duration, wind conditions, and proximity to the source."
+                },
+                environmentalImpact: {
+                    air: "Releases particulate matter and toxic gases that degrade local air quality and can be transported by wind to surrounding areas.",
+                    soil: "Burning residues and ash can contaminate soil with heavy metals and persistent organic pollutants.",
+                    water: "Ash and residues can be washed into water bodies during rain, contaminating surface water and groundwater.",
+                    wildlife: "Smoke and pollutants can harm birds and animals. Contaminated ash affects soil organisms and plant health.",
+                    climate: "Releases greenhouse gases including carbon dioxide and methane, contributing to climate change.",
+                    general: "Open burning is an inefficient and harmful waste management practice that creates multiple environmental problems."
+                },
+                pollutionPathway: [
+                    "Waste materials accumulate without proper collection",
+                    "Waste is burned in open air (often to reduce volume or dispose)",
+                    "Combustion releases smoke, particulate matter, and toxic gases",
+                    "Incomplete combustion creates additional harmful compounds",
+                    "Wind transports pollutants to surrounding areas",
+                    "Ash and residues remain on soil, affecting soil quality",
+                    "Rain can wash contaminants into water systems"
                 ],
-                environmentalImpact: "Plastic pollution harms wildlife through ingestion and entanglement, breaks down into microplastics that enter food chains, persists for centuries in ecosystems, and contaminates soil and water systems.",
-                urgency: "Medium",
-                recommendedAction: "Organize systematic cleanup of visible plastic waste, establish waste collection infrastructure, prevent further dumping, and report to local environmental authorities.",
-                recommendedActions: [
-                    "Organize community cleanup event with proper safety equipment",
-                    "Separate collected plastic by type for maximum recycling potential",
-                    "Report pollution to local environmental protection agency",
-                    "Install waste bins and signage to prevent future dumping",
-                    "Educate local community about proper waste disposal",
-                    "Monitor area regularly to prevent recurrence"
+                reductionPlan: [
+                    "Stop open burning immediately where practical",
+                    "Keep people, especially children and vulnerable individuals, away from smoke exposure",
+                    "Separate waste into recyclable, compostable, and non-recyclable categories",
+                    "Send recyclable materials to appropriate collection points",
+                    "Compost organic waste rather than burning",
+                    "Use proper waste disposal facilities for non-recyclable waste",
+                    "Establish or improve local waste collection services",
+                    "Educate community about harmful effects of open burning"
                 ],
-                greenImpactScore: 58,
-                impactExplanation: "Addressing plastic pollution prevents ecosystem damage, protects wildlife, reduces microplastic generation, and improves environmental quality for surrounding communities."
+                preventionPlan: [
+                    "Implement proper waste segregation at source",
+                    "Establish regular waste collection services",
+                    "Create local recycling and composting programs",
+                    "Provide safe disposal options for all waste types",
+                    "Educate community about proper waste management",
+                    "Enforce regulations against open burning",
+                    "Support alternatives like biogas from organic waste"
+                ],
+                actionPriority: {
+                    now: [
+                        "Avoid exposure to visible smoke where practical",
+                        "Keep children and vulnerable individuals away from burning area",
+                        "Document the burning activity if safe to do so"
+                    ],
+                    next: [
+                        "Report burning to local environmental authorities",
+                        "Organize community waste segregation program",
+                        "Identify recycling and proper disposal facilities in the area",
+                        "Educate neighbors about health and environmental risks"
+                    ],
+                    longTerm: [
+                        "Advocate for improved municipal waste management",
+                        "Support community composting initiatives",
+                        "Promote waste reduction and reuse practices",
+                        "Work with local authorities to eliminate open burning",
+                        "Establish monitoring to prevent recurrence"
+                    ]
+                }
             },
+
+            // Scenario 2: Water Pollution - Sewage/Industrial Discharge
             {
-                pollutionType: "Land Pollution",
-                category: "Garbage Dumping",
-                severity: "High",
-                severityScore: 78,
-                confidence: 68,
-                description: "Illegal dumping of mixed waste materials including household refuse, construction debris, and potentially hazardous materials.",
-                detectedEvidence: [
-                    "Mixed waste accumulation",
-                    "Evidence of illegal dumping",
-                    "Soil contamination risk",
-                    "Odor and pest attraction potential"
+                sceneDescription: "Water body showing visible contamination with discoloration and floating debris",
+                pollution: {
+                    primaryType: "water_pollution",
+                    primarySubtype: "sewage_or_industrial_discharge",
+                    confidence: 78,
+                    secondaryTypes: ["land_pollution"],
+                    visualEvidence: [
+                        "Water discoloration indicating contamination",
+                        "Floating debris and waste materials",
+                        "Visible foam or surface scum",
+                        "Lack of visible aquatic life indicators",
+                        "Discharge point visible near water body"
+                    ],
+                    likelySources: [
+                        {
+                            source: "Sewage discharge",
+                            confidence: 72,
+                            evidence: "Water discoloration and organic matter characteristics suggest sewage contamination"
+                        },
+                        {
+                            source: "Industrial discharge",
+                            confidence: 45,
+                            evidence: "Possible but less certain based on visual characteristics"
+                        }
+                    ],
+                    potentialPollutants: [
+                        "Pathogenic bacteria and viruses",
+                        "Organic matter and nutrients (nitrogen, phosphorus)",
+                        "Suspended solids",
+                        "Chemical contaminants (if industrial)",
+                        "Heavy metals (if industrial)",
+                        "Dissolved oxygen depletion"
+                    ],
+                    concernScore: 85,
+                    concernLevel: "high"
+                },
+                healthImpact: {
+                    summary: "Contact with contaminated water can cause illness. Ingestion or use of contaminated water poses serious health risks.",
+                    possibleEffects: [
+                        "Gastrointestinal illness from pathogenic organisms",
+                        "Skin infections and rashes from direct contact",
+                        "Eye and ear infections",
+                        "Waterborne diseases (cholera, typhoid, hepatitis A in severe cases)",
+                        "Vector-borne diseases if stagnant contaminated water creates breeding grounds"
+                    ],
+                    note: "Do not drink, swim in, or use contaminated water. Avoid all direct contact until water is officially tested and declared safe."
+                },
+                environmentalImpact: {
+                    water: "Contamination degrades water quality, making it unsafe for human use, irrigation, and aquatic life.",
+                    wildlife: "Polluted water kills fish and other aquatic organisms. Oxygen depletion creates dead zones. Affects birds and animals that depend on the water body.",
+                    soil: "If contaminated water is used for irrigation, pollutants accumulate in soil.",
+                    ecosystem: "Disrupts entire aquatic ecosystem. Nutrient pollution causes algal blooms that further degrade water quality.",
+                    community: "Affects communities dependent on the water body for drinking water, fishing, agriculture, and livelihoods.",
+                    general: "Water pollution has cascading effects throughout the environment and human communities."
+                },
+                pollutionPathway: [
+                    "Sewage or industrial waste enters water body (pipe, open drain, or runoff)",
+                    "Contaminants disperse through water",
+                    "Organic matter depletes dissolved oxygen as it decomposes",
+                    "Nutrients cause algal blooms and eutrophication",
+                    "Water becomes unsuitable for aquatic life and human use",
+                    "Contamination can spread downstream",
+                    "Sediments accumulate pollutants that persist over time"
                 ],
-                environmentalImpact: "Illegal dumping contaminates soil with chemicals and heavy metals, attracts disease-carrying pests, produces harmful leachate that pollutes groundwater, creates fire hazards, and degrades local environment quality.",
-                urgency: "High",
-                recommendedAction: "Report immediately to local authorities. Do not attempt cleanup without professional assessment due to potential hazardous material presence.",
-                recommendedActions: [
-                    "Document pollution with photos and location data",
-                    "Report to municipal authorities and environmental protection agency",
-                    "Do NOT attempt cleanup without professional hazard assessment",
-                    "Request official environmental impact assessment",
-                    "Install physical barriers or surveillance to prevent further dumping",
-                    "Advocate for increased enforcement and penalties"
-                ],
-                greenImpactScore: 42,
-                impactExplanation: "Illegal dumping creates severe environmental and health risks. Professional cleanup and enforcement are essential to restore environmental quality."
-            },
-            {
-                pollutionType: "Water Pollution",
-                category: "Water Contamination",
-                severity: "High",
-                severityScore: 82,
-                confidence: 75,
-                description: "Visible contamination of water body with debris, discoloration indicating chemical presence, and potential sewage or industrial discharge.",
-                detectedEvidence: [
-                    "Water discoloration",
-                    "Floating debris and waste",
-                    "Potential chemical or sewage contamination",
-                    "Aquatic ecosystem stress indicators"
-                ],
-                environmentalImpact: "Water pollution kills aquatic life, makes water unsafe for human use, disrupts entire aquatic ecosystems, contaminates drinking water sources, and affects communities dependent on water body.",
-                urgency: "Critical",
-                recommendedAction: "Report immediately to water quality authorities. Avoid direct contact with water. Do not consume or use water until officially tested.",
-                recommendedActions: [
-                    "Report immediately to water quality management authority",
-                    "Document pollution source if identifiable",
+                reductionPlan: [
+                    "Report water pollution immediately to local water quality authorities",
+                    "Document pollution source if visible and safe to do so",
                     "Avoid all contact with contaminated water",
-                    "Alert downstream communities of potential contamination",
+                    "Alert downstream communities of contamination risk",
                     "Request emergency water quality testing",
-                    "Identify and stop pollution source",
-                    "Initiate investigation for legal action"
+                    "Identify and work to stop pollution source",
+                    "Support proper wastewater treatment infrastructure",
+                    "Initiate cleanup and remediation with professional assistance"
                 ],
-                greenImpactScore: 35,
-                impactExplanation: "Water pollution has severe and immediate impacts on ecosystems and human health. Urgent action required to stop contamination and initiate remediation."
+                preventionPlan: [
+                    "Ensure proper sewage treatment before discharge",
+                    "Enforce industrial wastewater treatment standards",
+                    "Prevent direct discharge of untreated waste into water bodies",
+                    "Maintain and upgrade wastewater treatment infrastructure",
+                    "Monitor water quality regularly",
+                    "Create buffer zones around water bodies",
+                    "Educate communities about water protection"
+                ],
+                actionPriority: {
+                    now: [
+                        "Do NOT use contaminated water for any purpose",
+                        "Avoid all direct contact with the water",
+                        "Document pollution with photos and location data if safe"
+                    ],
+                    next: [
+                        "Report immediately to water quality management authority",
+                        "Request emergency water quality testing",
+                        "Identify and document pollution source if visible",
+                        "Alert communities that may be affected downstream"
+                    ],
+                    longTerm: [
+                        "Work with authorities to stop pollution source",
+                        "Advocate for improved wastewater treatment",
+                        "Support water quality monitoring programs",
+                        "Initiate legal action if pollution continues",
+                        "Promote water protection and conservation"
+                    ]
+                }
+            },
+
+            // Scenario 3: Plastic Pollution and Littering
+            {
+                sceneDescription: "Environment with visible accumulation of plastic waste and litter",
+                pollution: {
+                    primaryType: "plastic_pollution",
+                    primarySubtype: "plastic_littering_and_accumulation",
+                    confidence: 86,
+                    secondaryTypes: ["land_pollution"],
+                    visualEvidence: [
+                        "Scattered plastic bottles and containers",
+                        "Plastic bags visible in environment",
+                        "Non-biodegradable waste in natural setting",
+                        "Plastic waste near water body or drainage",
+                        "Evidence of long-term accumulation"
+                    ],
+                    likelySources: [
+                        {
+                            source: "Improper waste disposal and littering",
+                            confidence: 88,
+                            evidence: "Scattered distribution pattern consistent with littering and lack of waste collection"
+                        },
+                        {
+                            source: "Inadequate waste management infrastructure",
+                            confidence: 75,
+                            evidence: "Accumulation suggests absence of regular collection"
+                        }
+                    ],
+                    potentialPollutants: [
+                        "Plastic polymers (persistent in environment)",
+                        "Microplastics from degradation",
+                        "Chemical additives from plastics",
+                        "Leachate from decomposing associated organic waste"
+                    ],
+                    concernScore: 68,
+                    concernLevel: "moderate_to_high"
+                },
+                healthImpact: {
+                    summary: "Plastic pollution creates environmental health hazards and can contribute to disease vector breeding in accumulated waste.",
+                    possibleEffects: [
+                        "Breeding grounds for disease-carrying mosquitoes in water-holding plastics",
+                        "Attraction of pests and disease vectors",
+                        "Injury risk from sharp or broken plastic items",
+                        "Indirect health impacts through contaminated water and food chains",
+                        "Microplastic exposure through environment (long-term effects under study)"
+                    ],
+                    note: "Primary health concerns are indirect through environmental degradation and disease vector proliferation."
+                },
+                environmentalImpact: {
+                    land: "Plastic persists for decades to centuries, contaminating soil and preventing natural decomposition processes.",
+                    water: "Plastic waste clogs drainage systems, enters water bodies, and breaks down into microplastics that contaminate aquatic ecosystems.",
+                    wildlife: "Animals mistake plastic for food, leading to ingestion and injury. Entanglement in plastic waste harms wildlife. Microplastics enter food chains.",
+                    ecosystem: "Plastic accumulation degrades habitat quality, affects soil organisms, and disrupts natural ecosystem functions.",
+                    marine: "If plastic reaches waterways, it contributes to ocean plastic pollution affecting marine life globally.",
+                    general: "Plastic pollution is a persistent, widespread environmental problem that requires systematic solutions."
+                },
+                pollutionPathway: [
+                    "Plastic products are used and discarded",
+                    "Inadequate waste collection allows accumulation",
+                    "Littering adds to environmental plastic load",
+                    "Wind and rain disperse plastic waste",
+                    "Plastic enters drainage systems and water bodies",
+                    "UV light and physical forces fragment plastic into smaller pieces",
+                    "Microplastics persist in environment and enter food chains",
+                    "Plastic accumulates in environmental sinks"
+                ],
+                reductionPlan: [
+                    "Organize community cleanup of visible plastic waste",
+                    "Separate collected plastic by type for recycling",
+                    "Report chronic littering areas to local authorities",
+                    "Install waste bins in high-traffic areas",
+                    "Establish regular waste collection services",
+                    "Create awareness campaigns about proper disposal",
+                    "Support local recycling programs",
+                    "Prevent further plastic accumulation through monitoring"
+                ],
+                preventionPlan: [
+                    "Reduce single-use plastic consumption",
+                    "Switch to reusable bags, bottles, and containers",
+                    "Support businesses that minimize plastic packaging",
+                    "Properly dispose of all plastic waste in designated collection",
+                    "Participate in plastic recycling programs",
+                    "Educate community about plastic pollution impacts",
+                    "Advocate for improved waste management infrastructure",
+                    "Support policies that reduce plastic waste"
+                ],
+                actionPriority: {
+                    now: [
+                        "Organize or join community cleanup efforts",
+                        "Properly dispose of your own plastic waste",
+                        "Document pollution areas for reporting"
+                    ],
+                    next: [
+                        "Report littering and waste accumulation to authorities",
+                        "Work with community to establish waste collection",
+                        "Identify and support local recycling facilities",
+                        "Install waste bins where needed",
+                        "Begin educational outreach about proper disposal"
+                    ],
+                    longTerm: [
+                        "Advocate for comprehensive waste management system",
+                        "Reduce overall plastic consumption in community",
+                        "Support extended producer responsibility for plastics",
+                        "Promote reusable alternatives",
+                        "Monitor and prevent future plastic accumulation"
+                    ]
+                }
+            },
+
+            // Scenario 4: Industrial/Vehicle Emissions
+            {
+                sceneDescription: "Urban or industrial area with visible air quality degradation",
+                pollution: {
+                    primaryType: "air_pollution",
+                    primarySubtype: "industrial_or_vehicle_emissions",
+                    confidence: 75,
+                    secondaryTypes: [],
+                    visualEvidence: [
+                        "Hazy or reduced visibility conditions",
+                        "Industrial facility visible in scene",
+                        "Heavy traffic or multiple vehicles",
+                        "Stack emissions visible",
+                        "Atmospheric discoloration"
+                    ],
+                    likelySources: [
+                        {
+                            source: "Industrial emissions",
+                            confidence: 68,
+                            evidence: "Industrial facility visible with stack emissions"
+                        },
+                        {
+                            source: "Vehicle exhaust",
+                            confidence: 72,
+                            evidence: "High traffic volume visible in urban setting"
+                        }
+                    ],
+                    potentialPollutants: [
+                        "Particulate matter (PM2.5 and PM10)",
+                        "Nitrogen oxides (NOx)",
+                        "Sulfur dioxide (SO2)",
+                        "Carbon monoxide (CO)",
+                        "Volatile organic compounds (VOCs)",
+                        "Ozone (formed from precursor pollutants)",
+                        "Heavy metals (from industrial sources)"
+                    ],
+                    concernScore: 71,
+                    concernLevel: "moderate_to_high"
+                },
+                healthImpact: {
+                    summary: "Elevated air pollution from industrial and vehicle emissions can affect respiratory and cardiovascular health with sufficient exposure.",
+                    possibleEffects: [
+                        "Respiratory irritation and reduced lung function",
+                        "Aggravation of asthma and bronchitis",
+                        "Increased risk of respiratory infections",
+                        "Cardiovascular effects from particulate matter exposure",
+                        "Long-term exposure associated with chronic health conditions",
+                        "Children, elderly, and people with pre-existing conditions at higher risk"
+                    ],
+                    note: "Health impacts depend on actual pollutant concentrations, exposure duration, and individual susceptibility. Air quality monitoring provides accurate exposure assessment."
+                },
+                environmentalImpact: {
+                    air: "Emissions degrade air quality, reduce visibility, and contribute to smog formation. Pollutants can be transported long distances affecting regional air quality.",
+                    climate: "Greenhouse gas emissions contribute to climate change. Black carbon from incomplete combustion has warming effects.",
+                    ecosystem: "Acid rain from SO2 and NOx damages forests and water bodies. Ozone damages vegetation.",
+                    soil: "Airborne pollutants deposit on soil, affecting soil chemistry and plant health.",
+                    water: "Atmospheric deposition of pollutants contaminates water bodies.",
+                    general: "Urban and industrial air pollution is a major environmental health challenge requiring systematic emission controls."
+                },
+                pollutionPathway: [
+                    "Fuel combustion in vehicles releases exhaust pollutants",
+                    "Industrial processes emit particulates and gases",
+                    "Pollutants mix in atmosphere",
+                    "Sunlight triggers photochemical reactions forming secondary pollutants like ozone",
+                    "Wind patterns transport and disperse pollutants",
+                    "Atmospheric conditions (temperature inversions) can trap pollutants near ground level",
+                    "Pollutants deposit on surfaces and enter ecosystems"
+                ],
+                reductionPlan: [
+                    "Support cleaner transportation: public transit, cycling, walking, electric vehicles",
+                    "Reduce personal vehicle use where practical",
+                    "Advocate for industrial emission controls and enforcement",
+                    "Support clean energy transition away from fossil fuels",
+                    "Plant trees and vegetation to improve local air quality",
+                    "Monitor air quality through official channels",
+                    "Reduce indoor pollution exposure during high pollution periods",
+                    "Support policies that improve air quality"
+                ],
+                preventionPlan: [
+                    "Transition to clean energy sources",
+                    "Improve public transportation infrastructure",
+                    "Enforce vehicle emission standards",
+                    "Require industrial pollution control technology",
+                    "Promote electric and low-emission vehicles",
+                    "Implement urban green spaces for air quality improvement",
+                    "Establish air quality monitoring networks",
+                    "Support regional air quality management plans"
+                ],
+                actionPriority: {
+                    now: [
+                        "Check official air quality data for your area",
+                        "Limit outdoor exertion during poor air quality periods",
+                        "Keep children and vulnerable individuals indoors when appropriate"
+                    ],
+                    next: [
+                        "Reduce personal contributions: use public transit or carpool",
+                        "Support local air quality monitoring",
+                        "Advocate for emission controls on major pollution sources",
+                        "Plant trees and support urban greening"
+                    ],
+                    longTerm: [
+                        "Support transition to clean energy and transportation",
+                        "Advocate for comprehensive air quality management",
+                        "Promote industrial emission reduction technology",
+                        "Support regional and national air quality policies",
+                        "Work toward long-term emission reduction targets"
+                    ]
+                }
             }
         ];
     }

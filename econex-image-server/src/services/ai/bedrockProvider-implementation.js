@@ -149,34 +149,134 @@ IMPORTANT:
     }
 
     async analyzePollution(imageBuffer, mimeType) {
-        const prompt = `Analyze this image for environmental pollution.
+        const prompt = `You are an AI environmental analyst. Analyze this image for pollution indicators.
 
-Respond in JSON:
+IMPORTANT ACCURACY RULES:
+- Never fabricate pollutant measurements from a photograph
+- Use "estimated", "likely", "possible" appropriately
+- Acknowledge uncertainty clearly
+- Distinguish visual evidence from direct measurement
+- Use calm, measured language (not panic-inducing)
+
+CRITICAL: Respond ONLY with valid JSON. No markdown code blocks, no explanatory text before or after.
+
+Respond with this exact JSON structure:
 {
-    "pollutionType": "<type of pollution>",
-    "category": "<pollution category>",
-    "severity": "Low" | "Moderate" | "High" | "Critical",
-    "severityScore": <0-100>,
+  "authenticity": {
+    "classification": "original_likely" | "uncertain" | "ai_generated_or_manipulated",
     "confidence": <0-100>,
-    "description": "<detailed description>",
-    "detectedEvidence": ["<evidence 1>", "<evidence 2>", ...],
-    "environmentalImpact": "<impact description>",
-    "urgency": "Low" | "Medium" | "High" | "Critical",
-    "recommendedAction": "<primary action>",
-    "recommendedActions": [
-        "<action 1>",
-        "<action 2>",
-        ...
+    "aiGeneratedLikelihood": <0-100>,
+    "manipulationLikelihood": <0-100>,
+    "provenance": "not_available",
+    "message": "<brief explanation of authenticity assessment>"
+  },
+  "scene": {
+    "description": "<describe the environmental scene visible in the image>",
+    "imageQuality": <0-100>
+  },
+  "pollution": {
+    "primaryType": "air_pollution" | "water_pollution" | "land_pollution" | "plastic_pollution" | "soil_pollution" | "noise_pollution",
+    "primarySubtype": "<specific subtype like open_waste_burning, sewage_discharge, plastic_littering, vehicle_emissions, etc>",
+    "confidence": <0-100>,
+    "secondaryTypes": ["<secondary type 1>", "<secondary type 2>"],
+    "visualEvidence": [
+      "<specific visual indicator 1>",
+      "<specific visual indicator 2>",
+      "<specific visual indicator 3>",
+      "<specific visual indicator 4>",
+      "<specific visual indicator 5>"
     ],
-    "greenImpactScore": <0-100>,
-    "impactExplanation": "<explanation>"
+    "likelySources": [
+      {
+        "source": "<pollution source name>",
+        "confidence": <0-100>,
+        "evidence": "<explanation of why this source is identified>"
+      }
+    ],
+    "potentialPollutants": [
+      "<pollutant name 1>",
+      "<pollutant name 2>",
+      "<pollutant name 3>"
+    ],
+    "concernScore": <0-100>,
+    "concernLevel": "low" | "moderate" | "moderate_to_high" | "high" | "critical"
+  },
+  "healthImpact": {
+    "summary": "<calm summary of potential health impacts>",
+    "possibleEffects": [
+      "<possible health effect 1>",
+      "<possible health effect 2>",
+      "<possible health effect 3>"
+    ],
+    "note": "Actual health risk depends on pollutant concentration, exposure duration, and individual susceptibility."
+  },
+  "environmentalImpact": {
+    "air": "<impact on air quality if applicable>",
+    "water": "<impact on water if applicable>",
+    "soil": "<impact on soil if applicable>",
+    "wildlife": "<impact on wildlife if applicable>",
+    "climate": "<impact on climate if applicable>",
+    "general": "<overall environmental impact statement>"
+  },
+  "pollutionPathway": [
+    "<step 1 in how this pollution was created>",
+    "<step 2>",
+    "<step 3>",
+    "<step 4>"
+  ],
+  "reductionPlan": [
+    "<specific action to reduce this pollution>",
+    "<action 2>",
+    "<action 3>",
+    "<action 4>"
+  ],
+  "preventionPlan": [
+    "<specific prevention action>",
+    "<action 2>",
+    "<action 3>",
+    "<action 4>"
+  ],
+  "actionPriority": {
+    "now": ["<immediate action 1>", "<immediate action 2>"],
+    "next": ["<short-term action 1>", "<short-term action 2>"],
+    "longTerm": ["<prevention strategy 1>", "<prevention strategy 2>"]
+  }
 }
 
-Identify: plastic pollution, water pollution, air pollution, land pollution, illegal dumping, etc.`;
+DETECTION RULES:
+- Detect ALL visible pollution indicators in the image
+- If no pollution is clearly visible, set concernScore low and explain in visual evidence
+- Provide 5-7 specific visual evidence items
+- List 3-6 potential pollutants based on source type
+- Give realistic concern scores (not everything is critical)
+- Health and environmental impacts should be scientifically grounded
+- Action plans should be practical and specific
+
+Pollution types to consider:
+- Air pollution (smoke, haze, industrial emissions, vehicle exhaust, burning)
+- Water pollution (contamination, discoloration, floating debris, sewage, oil)
+- Plastic pollution (bottles, bags, containers, littering)
+- Land pollution (garbage dumping, waste accumulation, soil contamination)
+- Other environmental degradation
+
+Be thorough but accurate. Only report what can be reasonably inferred from visual evidence.`;
 
         try {
             const response = await this._callModel(imageBuffer, mimeType, prompt);
-            return response;
+
+            return {
+                ...response,
+                measurement: {
+                    available: false,
+                    message: "Pollutant concentrations cannot be measured from this image alone. Connect a compatible air-quality sensor or API for real-time measurements."
+                },
+                limitations: [
+                    "Image analysis cannot directly measure pollutant concentration.",
+                    "Source attribution may be uncertain without additional context.",
+                    "Actual health and environmental risk depends on pollutant concentration, exposure duration, and local conditions.",
+                    "Visual evidence may not capture all pollution sources in the area."
+                ]
+            };
         } catch (error) {
             logger.error("Pollution analysis error:", error);
             throw new Error(`Pollution analysis failed: ${error.message}`);
