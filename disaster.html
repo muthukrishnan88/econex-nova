@@ -161,21 +161,36 @@ function renderResults(data) {
     const safety = data.safetyGuidance;
     const impacts = data.impacts;
 
+    // Check if this is a historical disaster
+    const isHistorical = disaster.isHistorical === true;
+
     let html = `
         <div class="disaster-card">
-            <h3>🌪️ Disaster Detected</h3>
+            <h3>🌪️ ${isHistorical ? 'Historical Disaster Detected' : 'Disaster Detected'}</h3>
             <div style="text-align:center;margin:25px 0;">
                 <div class="concern-score">${concern.score}</div>
                 <p style="color:var(--muted);">Concern Score / 100</p>
                 <p style="margin-top:10px;"><strong>Level:</strong> ${concern.level.toUpperCase()}</p>
             </div>
-            <h4 style="font-size:28px;text-align:center;margin:20px 0;">${formatType(disaster.type)}</h4>
-            <p style="text-align:center;color:var(--muted);">${disaster.subtype.replace(/_/g, ' ')}</p>
+            ${isHistorical ? `
+                <h4 style="font-size:28px;text-align:center;margin:20px 0;color:var(--green);">${disaster.name}</h4>
+                <div style="text-align:center;margin:20px 0;">
+                    <p style="font-size:18px;color:var(--text);"><strong>Location:</strong> ${disaster.location}</p>
+                    <p style="font-size:16px;color:var(--muted);margin:8px 0;"><strong>Date:</strong> ${disaster.date}</p>
+                    <p style="font-size:16px;color:var(--text);margin:8px 0;"><strong>Type:</strong> ${formatType(disaster.type)} ${disaster.subtype ? `(${disaster.subtype.replace(/_/g, ' ')})` : ''}</p>
+                    ${disaster.casualties ? `<p style="font-size:15px;color:#ff6b6b;margin:8px 0;"><strong>Casualties:</strong> ${disaster.casualties}</p>` : ''}
+                    ${disaster.damage ? `<p style="font-size:15px;color:#ffd166;margin:8px 0;"><strong>Damage:</strong> ${disaster.damage}</p>` : ''}
+                    ${disaster.impactDetails ? `<p style="font-size:14px;color:var(--muted);margin:12px 0;">${disaster.impactDetails}</p>` : ''}
+                </div>
+            ` : `
+                <h4 style="font-size:28px;text-align:center;margin:20px 0;">${formatType(disaster.type)}</h4>
+                <p style="text-align:center;color:var(--muted);">${disaster.subtype.replace(/_/g, ' ')}</p>
+            `}
             <p style="text-align:center;margin-top:15px;"><strong>Confidence:</strong> ${disaster.confidence}%</p>
         </div>
 
         <div class="disaster-card">
-            <h4>👁️ Visual Evidence</h4>
+            <h4>👁️ ${isHistorical ? 'Historical Evidence' : 'Visual Evidence'}</h4>
             <ul>
                 ${disaster.evidence.map(e => `<li>${e}</li>`).join('')}
             </ul>
