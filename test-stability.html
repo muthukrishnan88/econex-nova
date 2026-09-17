@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollution Analysis Stability Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .test-run {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 3px;
+        }
+        .test-run h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .primary {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        .confidence {
+            color: #27ae60;
+        }
+        .evidence {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        .evidence li {
+            margin: 5px 0;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #d5f4e6;
+            border-radius: 5px;
+        }
+        .summary.unstable {
+            background: #fadbd8;
+        }
+        .cached {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .hash {
+            font-family: monospace;
+            font-size: 12px;
+            color: #7f8c8d;
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Pollution Analysis Stability Test</h1>
+
+        <div class="upload-section">
+            <h2>Upload Image</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <button id="runTestBtn">Run 5 Stability Tests</button>
+            <button id="clearCacheBtn">Clear Cache & Retest</button>
+        </div>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        let selectedFile = null;
+
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            document.getElementById('runTestBtn').disabled = !selectedFile;
+        });
+
+        document.getElementById('runTestBtn').addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            document.getElementById('runTestBtn').disabled = true;
+            document.getElementById('results').innerHTML = '<p>Running 5 tests...</p>';
+
+            const results = [];
+
+            for (let i = 1; i <= 5; i++) {
+                const formData = new FormData();
+                formData.append('image', selectedFile);
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/pollution/analyze`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    results.push({
+                        run: i,
+                        data: data
+                    });
+
+                    displayResult(i, data);
+                } catch (error) {
+                    console.error(`Test ${i} failed:`, error);
+                    displayError(i, error);
+                }
+
+                // Small delay between requests
+                if (i < 5) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+
+            displaySummary(results);
+            document.getElementById('runTestBtn').disabled = false;
+        });
+
+        document.getElementById('clearCacheBtn').addEventListener('click', () => {
+            document.getElementById('results').innerHTML = '';
+            alert('Note: Cache is server-side. Server restart will clear cache.\nFor this test, just wait 1 hour or modify the image slightly.');
+        });
+
+        function displayResult(run, data) {
+            const resultsDiv = document.getElementById('results');
+
+            let primaryType = 'UNKNOWN';
+            let confidence = 0;
+            let evidence = [];
+            let cached = data.cached || false;
+
+            if (data.pollutionDetected === false) {
+                primaryType = 'NO POLLUTION DETECTED';
+                confidence = 100;
+            } else if (data.pollution) {
+                primaryType = data.pollution.primaryType || 'UNKNOWN';
+                confidence = data.pollution.confidence || 0;
+                evidence = data.pollution.visualEvidence || [];
+            } else if (data.primaryPollution) {
+                primaryType = data.primaryPollution.type || 'UNKNOWN';
+                confidence = data.primaryPollution.confidence || 0;
+                evidence = data.primaryPollution.evidence || [];
+            }
+
+            const html = `
+                <div class="test-run">
+                    <h3>Test Run #${run} ${cached ? '<span class="cached">CACHED</span>' : ''}</h3>
+                    <div class="primary">Primary: ${formatPollutionType(primaryType)}</div>
+                    <div class="confidence">Confidence: ${confidence}%</div>
+                    ${evidence.length > 0 ? `
+                        <div class="evidence">
+                            <strong>Evidence:</strong>
+                            <ul>
+                                ${evidence.slice(0, 3).map(e => `<li>${e}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            resultsDiv.innerHTML += html;
+        }
+
+        function displayError(run, error) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML += `
+                <div class="test-run" style="border-left-color: #e74c3c;">
+                    <h3>Test Run #${run}</h3>
+                    <div style="color: #e74c3c;">ERROR: ${error.message}</div>
+                </div>
+            `;
+        }
+
+        function displaySummary(results) {
+            const primaryTypes = results.map(r => {
+                if (r.data.pollutionDetected === false) return 'NO_POLLUTION';
+                if (r.data.pollution) return r.data.pollution.primaryType;
+                if (r.data.primaryPollution) return r.data.primaryPollution.type;
+                return 'UNKNOWN';
+            });
+
+            const confidences = results.map(r => {
+                if (r.data.pollutionDetected === false) return 100;
+                if (r.data.pollution) return r.data.pollution.confidence;
+                if (r.data.primaryPollution) return r.data.primaryPollution.confidence;
+                return 0;
+            });
+
+            const uniqueTypes = [...new Set(primaryTypes)];
+            const isStable = uniqueTypes.length === 1;
+
+            const avgConfidence = (confidences.reduce((a, b) => a + b, 0) / confidences.length).toFixed(1);
+            const minConfidence = Math.min(...confidences);
+            const maxConfidence = Math.max(...confidences);
+
+            const cached = results.filter(r => r.data.cached).length;
+
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = `summary ${isStable ? '' : 'unstable'}`;
+            summaryDiv.innerHTML = `
+                <h2>📊 Test Summary</h2>
+                <p><strong>Stability:</strong> ${isStable ? '✅ STABLE' : '❌ UNSTABLE'}</p>
+                <p><strong>Unique Primary Types:</strong> ${uniqueTypes.length} (${uniqueTypes.join(', ')})</p>
+                <p><strong>Confidence Range:</strong> ${minConfidence}% - ${maxConfidence}% (avg: ${avgConfidence}%)</p>
+                <p><strong>Cached Results:</strong> ${cached} / 5</p>
+
+                ${isStable ? `
+                    <p style="color: #27ae60; font-weight: bold;">
+                        ✅ PASS: Same image produced consistent classification across 5 runs.
+                    </p>
+                ` : `
+                    <p style="color: #e74c3c; font-weight: bold;">
+                        ❌ FAIL: Same image produced different classifications. This indicates randomness in the model.
+                    </p>
+                `}
+            `;
+
+            document.getElementById('results').appendChild(summaryDiv);
+        }
+
+        function formatPollutionType(type) {
+            if (!type) return 'Unknown';
+            return type
+                .split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+    </script>
+</body>
+</html>

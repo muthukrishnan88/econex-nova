@@ -127,7 +127,7 @@ export class MockAIProvider {
         // For demo, we intelligently select scenarios or return "no pollution detected"
 
         const authenticity = this._generateAuthenticity();
-        const imageQuality = 75 + Math.floor(Math.random() * 20);
+        const imageQuality = 85; // Fixed quality for deterministic demo
 
         // For predictable demo: Always return pollution (no random "not detected")
         // 20% chance: No clear pollution detected (demonstrates precision)

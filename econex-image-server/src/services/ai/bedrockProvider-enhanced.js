@@ -482,7 +482,7 @@ Return ONLY valid JSON. No markdown code blocks. No explanatory text.`;
         const payload = {
             anthropic_version: "bedrock-2023-05-31",
             max_tokens: 4096,
-            temperature: 0.2,
+            temperature: 0, // Deterministic mode for consistent classification
             messages: [
                 {
                     role: "user",
