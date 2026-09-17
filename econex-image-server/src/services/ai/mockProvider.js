@@ -121,44 +121,188 @@ export class MockAIProvider {
     async analyzePollution(imageBuffer, mimeType) {
         await this._simulateDelay();
 
+        // Evidence-first simulation
+        // In real use, this would analyze actual image content
+        // For demo, we intelligently select scenarios or return "no pollution detected"
+
+        const random = Math.random();
+        const authenticity = this._generateAuthenticity();
+        const imageQuality = 75 + Math.floor(Math.random() * 20);
+
+        // 20% chance: No clear pollution detected (demonstrates precision)
+        if (random < 0.2) {
+            return {
+                success: true,
+                analysisMode: "AI",
+                authenticity,
+                scene: {
+                    description: "Environmental scene observed. No significant pollution indicators detected with sufficient confidence.",
+                    imageQuality
+                },
+                pollutionDetected: false,
+                reason: "No sufficient visual evidence of pollution event. Image shows environment but lacks clear pollution indicators that meet detection confidence threshold (≥85%).",
+                rejectedCategories: [
+                    {
+                        type: "air_pollution",
+                        reason: "No visible smoke, emissions, or atmospheric pollution indicators detected."
+                    },
+                    {
+                        type: "water_pollution",
+                        reason: "No contaminated water bodies, discharge, or water pollution evidence visible."
+                    },
+                    {
+                        type: "land_pollution",
+                        reason: "No significant waste accumulation, dumping, or land contamination detected."
+                    },
+                    {
+                        type: "plastic_pollution",
+                        reason: "No concentrated plastic waste or pollution accumulation visible."
+                    },
+                    {
+                        type: "oil_contamination",
+                        reason: "No oil spills, sheens, or petroleum contamination detected."
+                    },
+                    {
+                        type: "industrial_pollution",
+                        reason: "No industrial emission sources or industrial pollution evidence visible."
+                    }
+                ],
+                recommendation: "If pollution is present but not detected, try:\n• Closer image of pollution source\n• Better lighting conditions\n• Higher resolution photo\n• Image showing pollution indicators more clearly",
+                measurement: {
+                    available: false,
+                    message: "Pollutant concentrations cannot be measured from this image alone."
+                },
+                limitations: [
+                    "Image analysis cannot detect all pollution types in all conditions.",
+                    "Detection confidence depends on image quality, lighting, and visibility of pollution indicators.",
+                    "Absence of detection does not guarantee absence of pollution - only that clear visual evidence was not found."
+                ],
+                isDevelopmentMode: true,
+                demo: true,
+                note: "Development Mode: Evidence-first demonstration. This simulates how the AI would respond when no clear pollution is detected. Real AI vision analysis would examine actual image content."
+            };
+        }
+
+        // 80% chance: Return scenario-based pollution detection
         const scenarios = this._getPollutionScenarios();
         const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
 
-        // Add authenticity check
-        const authenticity = this._generateAuthenticity();
-
-        // Add scene description
         const scene = {
             description: scenario.sceneDescription || "Environmental scene with visible pollution indicators.",
-            imageQuality: 75 + Math.floor(Math.random() * 20)
+            imageQuality
         };
 
+        // Build response with evidence-first structure
         return {
             success: true,
             analysisMode: "AI",
             authenticity,
             scene,
-            pollution: scenario.pollution,
+            pollutionDetected: true,
+
+            // Primary pollution
+            primaryPollution: {
+                type: scenario.pollution.primaryType,
+                label: this._formatPollutionType(scenario.pollution.primaryType),
+                subtype: scenario.pollution.primarySubtype,
+                confidence: scenario.pollution.confidence,
+                evidence: scenario.pollution.visualEvidence
+            },
+
+            // Secondary pollution
+            secondaryPollution: scenario.pollution.secondaryTypes.map(type => ({
+                type,
+                label: this._formatPollutionType(type),
+                confidence: Math.floor(scenario.pollution.confidence * 0.9),
+                evidence: [`Secondary pollution indicator associated with primary ${this._formatPollutionType(scenario.pollution.primaryType)}`]
+            })),
+
+            // Rejected categories (demonstrate negative evidence)
+            rejectedCategories: this._getRejectedCategories(scenario.pollution.primaryType, scenario.pollution.secondaryTypes),
+
+            // Sources
+            likelySources: scenario.pollution.likelySources,
+
+            // Pollutants
+            potentialPollutants: scenario.pollution.potentialPollutants,
+
+            // Concern
+            concern: {
+                score: scenario.pollution.concernScore,
+                level: scenario.pollution.concernLevel,
+                explanation: `Visual pollution concern score based on detected ${this._formatPollutionType(scenario.pollution.primaryType)} with ${scenario.pollution.visualEvidence.length} pieces of visual evidence.`
+            },
+
+            // Health impact
             healthImpact: scenario.healthImpact,
+
+            // Environmental impact (only relevant categories)
             environmentalImpact: scenario.environmentalImpact,
+
+            // Pathway
             pollutionPathway: scenario.pollutionPathway,
+
+            // Actions
             reductionPlan: scenario.reductionPlan,
             preventionPlan: scenario.preventionPlan,
             actionPriority: scenario.actionPriority,
+
+            // Measurement
             measurement: {
                 available: false,
                 message: "Pollutant concentrations cannot be measured from this image alone. Connect a compatible air-quality sensor or API for real-time measurements."
             },
+
+            // Limitations
             limitations: [
                 "Image analysis cannot directly measure pollutant concentration.",
                 "Source attribution may be uncertain without additional context.",
                 "Actual health and environmental risk depends on pollutant concentration, exposure duration, and local conditions.",
                 "Visual evidence may not capture all pollution sources in the area."
             ],
+
             isDevelopmentMode: true,
             demo: true,
-            note: "Development Mode: This is simulated analysis. Connect AWS Bedrock with vision capabilities for real pollution detection."
+            note: "Development Mode: Evidence-first demonstration using scenario-based pollution detection. Real AI vision analysis would examine actual image content and return only pollution types with sufficient visual evidence (≥85% confidence)."
         };
+    }
+
+    _formatPollutionType(type) {
+        return type.split('_').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    }
+
+    _getRejectedCategories(primaryType, secondaryTypes) {
+        const allCategories = [
+            "air_pollution",
+            "water_pollution",
+            "land_pollution",
+            "plastic_pollution",
+            "oil_contamination",
+            "sewage_pollution",
+            "industrial_pollution",
+            "waste_burning"
+        ];
+
+        const detectedTypes = [primaryType, ...secondaryTypes];
+        const rejected = allCategories.filter(cat => !detectedTypes.includes(cat));
+
+        const reasons = {
+            air_pollution: "No visible smoke, emissions, or atmospheric pollution indicators detected.",
+            water_pollution: "No contaminated water bodies, discharge, or water pollution evidence visible.",
+            land_pollution: "No significant waste accumulation, dumping, or land contamination detected.",
+            plastic_pollution: "No concentrated plastic waste or pollution accumulation visible.",
+            oil_contamination: "No oil spills, sheens, or petroleum contamination detected.",
+            sewage_pollution: "No visible sewage discharge or wastewater evidence detected.",
+            industrial_pollution: "No industrial emission sources or industrial pollution evidence visible.",
+            waste_burning: "No visible fire, burning activity, or associated smoke detected."
+        };
+
+        return rejected.slice(0, 4).map(type => ({
+            type,
+            reason: reasons[type]
+        }));
     }
 
     _generateAuthenticity() {
