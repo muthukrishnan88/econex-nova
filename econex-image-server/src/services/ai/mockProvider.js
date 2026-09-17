@@ -1072,112 +1072,111 @@ export class MockAIProvider {
                 }
             },
 
-            // Scenario 4: Industrial/Vehicle Emissions
+            // Scenario 4: Soil/Land Pollution - Contaminated Ground
             {
-                sceneDescription: "Urban or industrial area with visible air quality degradation",
+                sceneDescription: "Land area with visible soil contamination and waste dumping",
                 pollution: {
-                    primaryType: "air_pollution",
-                    primarySubtype: "industrial_or_vehicle_emissions",
-                    confidence: 75,
-                    secondaryTypes: [],
+                    primaryType: "land_pollution",
+                    primarySubtype: "soil_contamination_and_waste_dumping",
+                    confidence: 81,
+                    secondaryTypes: ["plastic_pollution"],
                     visualEvidence: [
-                        "Hazy or reduced visibility conditions",
-                        "Industrial facility visible in scene",
-                        "Heavy traffic or multiple vehicles",
-                        "Stack emissions visible",
-                        "Atmospheric discoloration"
+                        "Visible waste accumulation on ground",
+                        "Discolored or degraded soil visible",
+                        "Mixed waste materials scattered across area",
+                        "Lack of vegetation in contaminated zones",
+                        "Evidence of improper waste disposal"
                     ],
                     likelySources: [
                         {
-                            source: "Industrial emissions",
-                            confidence: 68,
-                            evidence: "Industrial facility visible with stack emissions"
+                            source: "Illegal dumping",
+                            confidence: 79,
+                            evidence: "Scattered waste materials indicate unauthorized disposal"
                         },
                         {
-                            source: "Vehicle exhaust",
-                            confidence: 72,
-                            evidence: "High traffic volume visible in urban setting"
+                            source: "Inadequate waste management",
+                            confidence: 76,
+                            evidence: "Accumulated waste suggests lack of proper collection infrastructure"
                         }
                     ],
                     potentialPollutants: [
-                        "Particulate matter (PM2.5 and PM10)",
-                        "Nitrogen oxides (NOx)",
-                        "Sulfur dioxide (SO2)",
-                        "Carbon monoxide (CO)",
-                        "Volatile organic compounds (VOCs)",
-                        "Ozone (formed from precursor pollutants)",
-                        "Heavy metals (from industrial sources)"
+                        "Heavy metals (lead, mercury, cadmium)",
+                        "Organic pollutants and chemicals",
+                        "Leachate from decomposing waste",
+                        "Plastic microparticles",
+                        "Toxic chemicals from improper disposal",
+                        "Pathogens from organic waste"
                     ],
-                    concernScore: 71,
-                    concernLevel: "moderate_to_high"
+                    concernScore: 74,
+                    concernLevel: "high"
                 },
                 healthImpact: {
-                    summary: "Elevated air pollution from industrial and vehicle emissions can affect respiratory and cardiovascular health with sufficient exposure.",
+                    summary: "Soil contamination can affect human health through direct contact, contaminated food crops, or polluted groundwater.",
                     possibleEffects: [
-                        "Respiratory irritation and reduced lung function",
-                        "Aggravation of asthma and bronchitis",
-                        "Increased risk of respiratory infections",
-                        "Cardiovascular effects from particulate matter exposure",
-                        "Long-term exposure associated with chronic health conditions",
-                        "Children, elderly, and people with pre-existing conditions at higher risk"
+                        "Skin contact with contaminated soil may cause irritation",
+                        "Ingestion of contaminated soil particles (especially children)",
+                        "Exposure to toxic chemicals and heavy metals",
+                        "Risk of vector-borne diseases from accumulated waste",
+                        "Contaminated groundwater affecting drinking water sources",
+                        "Food safety concerns if crops grown in contaminated soil"
                     ],
-                    note: "Health impacts depend on actual pollutant concentrations, exposure duration, and individual susceptibility. Air quality monitoring provides accurate exposure assessment."
+                    note: "Actual health risk depends on contaminant type, concentration, exposure route, and duration. Soil testing provides accurate contamination assessment."
                 },
                 environmentalImpact: {
-                    air: "Emissions degrade air quality, reduce visibility, and contribute to smog formation. Pollutants can be transported long distances affecting regional air quality.",
-                    climate: "Greenhouse gas emissions contribute to climate change. Black carbon from incomplete combustion has warming effects.",
-                    ecosystem: "Acid rain from SO2 and NOx damages forests and water bodies. Ozone damages vegetation.",
-                    soil: "Airborne pollutants deposit on soil, affecting soil chemistry and plant health.",
-                    water: "Atmospheric deposition of pollutants contaminates water bodies.",
-                    general: "Urban and industrial air pollution is a major environmental health challenge requiring systematic emission controls."
+                    soil: "Contaminants alter soil chemistry, reduce fertility, and harm soil organisms. Heavy metals persist for decades affecting plant growth and soil ecosystem function.",
+                    water: "Rainwater leaches pollutants into groundwater and surface water bodies, spreading contamination beyond the original site.",
+                    wildlife: "Contaminated soil affects burrowing animals, soil-dwelling organisms, and wildlife that forage in affected areas.",
+                    ecosystem: "Soil contamination disrupts nutrient cycles, reduces biodiversity, and creates dead zones where vegetation cannot grow.",
+                    climate: "Degraded soil loses carbon storage capacity. Waste decomposition releases methane and other greenhouse gases.",
+                    general: "Land pollution creates long-term environmental damage requiring extensive remediation efforts."
                 },
                 pollutionPathway: [
-                    "Fuel combustion in vehicles releases exhaust pollutants",
-                    "Industrial processes emit particulates and gases",
-                    "Pollutants mix in atmosphere",
-                    "Sunlight triggers photochemical reactions forming secondary pollutants like ozone",
-                    "Wind patterns transport and disperse pollutants",
-                    "Atmospheric conditions (temperature inversions) can trap pollutants near ground level",
-                    "Pollutants deposit on surfaces and enter ecosystems"
+                    "Waste materials improperly disposed on land",
+                    "Chemicals and pollutants leach into soil",
+                    "Rainwater carries contaminants deeper into soil layers",
+                    "Pollutants spread through groundwater flow",
+                    "Soil organisms affected, reducing soil quality",
+                    "Contaminants enter food chain through plants and animals",
+                    "Wind may spread contaminated dust particles"
                 ],
                 reductionPlan: [
-                    "Support cleaner transportation: public transit, cycling, walking, electric vehicles",
-                    "Reduce personal vehicle use where practical",
-                    "Advocate for industrial emission controls and enforcement",
-                    "Support clean energy transition away from fossil fuels",
-                    "Plant trees and vegetation to improve local air quality",
-                    "Monitor air quality through official channels",
-                    "Reduce indoor pollution exposure during high pollution periods",
-                    "Support policies that improve air quality"
+                    "Remove visible waste and dispose properly",
+                    "Report illegal dumping sites to authorities",
+                    "Conduct soil contamination assessment",
+                    "Establish waste collection infrastructure",
+                    "Prevent further unauthorized disposal",
+                    "Consider soil remediation if heavily contaminated",
+                    "Fence off contaminated areas to prevent access",
+                    "Monitor groundwater quality in affected areas"
                 ],
                 preventionPlan: [
-                    "Transition to clean energy sources",
-                    "Improve public transportation infrastructure",
-                    "Enforce vehicle emission standards",
-                    "Require industrial pollution control technology",
-                    "Promote electric and low-emission vehicles",
-                    "Implement urban green spaces for air quality improvement",
-                    "Establish air quality monitoring networks",
-                    "Support regional air quality management plans"
+                    "Establish proper waste collection and disposal systems",
+                    "Enforce regulations against illegal dumping",
+                    "Educate community about proper waste disposal",
+                    "Provide accessible waste disposal facilities",
+                    "Implement regular monitoring and enforcement",
+                    "Promote waste reduction and recycling",
+                    "Support soil conservation practices",
+                    "Create designated waste management zones"
                 ],
                 actionPriority: {
                     now: [
-                        "Check official air quality data for your area",
-                        "Limit outdoor exertion during poor air quality periods",
-                        "Keep children and vulnerable individuals indoors when appropriate"
+                        "Avoid direct contact with contaminated soil",
+                        "Prevent children and animals from accessing affected area",
+                        "Document contamination with photos and location"
                     ],
                     next: [
-                        "Reduce personal contributions: use public transit or carpool",
-                        "Support local air quality monitoring",
-                        "Advocate for emission controls on major pollution sources",
-                        "Plant trees and support urban greening"
+                        "Report site to environmental authorities",
+                        "Organize community cleanup if safe to do so",
+                        "Request soil contamination assessment",
+                        "Identify and stop ongoing dumping activity"
                     ],
                     longTerm: [
-                        "Support transition to clean energy and transportation",
-                        "Advocate for comprehensive air quality management",
-                        "Promote industrial emission reduction technology",
-                        "Support regional and national air quality policies",
-                        "Work toward long-term emission reduction targets"
+                        "Support soil remediation programs",
+                        "Advocate for improved waste management infrastructure",
+                        "Promote proper waste disposal education",
+                        "Monitor long-term soil and groundwater quality",
+                        "Work toward comprehensive land pollution prevention"
                     ]
                 }
             }
