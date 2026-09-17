@@ -1672,7 +1672,7 @@ main {width: min(1180px, 92%);margin: auto;padding: 65px 0 90px;}
             <p>Select your environmental analysis type</p>
         </div>
 
-        <div class="choice-grid">
+        <div class="choice-grid" style="grid-template-columns: repeat(3, 1fr);">
 
             <div class="choice-card" onclick="chooseAnalysis('waste')">
                 <div class="choice-icon">♻️</div>
@@ -1689,6 +1689,15 @@ main {width: min(1180px, 92%);margin: auto;padding: 65px 0 90px;}
                 <p>
                     Identify visible environmental pollution, understand its impact
                     and generate practical cleanup and prevention actions.
+                </p>
+            </div>
+
+            <div class="choice-card" onclick="window.location.href='disaster.html'">
+                <div class="choice-icon">🌪️</div>
+                <h3>Scan Disaster</h3>
+                <p>
+                    Detect disaster types, identify affected areas with GDACS data,
+                    assess impacts and get immediate safety guidance.
                 </p>
             </div>
 
