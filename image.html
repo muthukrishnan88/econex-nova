@@ -1760,9 +1760,22 @@ main {width: min(1180px, 92%);margin: auto;padding: 65px 0 90px;}
 
 </main>
 
+<!-- PRODUCTION CONFIG: Update this after deploying backend -->
+<script>
+// Set this to your Render backend URL after deployment
+// Example: 'https://econex-nova-api.onrender.com'
+window.ECONEX_API_URL_PRODUCTION = '';
+</script>
+
 <script src="config.js"></script>
 <script>
-const API_BASE_URL = (window.ECONEX_CONFIG && window.ECONEX_CONFIG.API_URL) || window.ECONEX_API_URL || "http://localhost:3000";
+// Priority: Production URL > Config > Environment > Localhost
+const API_BASE_URL = window.ECONEX_API_URL_PRODUCTION
+    || (window.ECONEX_CONFIG && window.ECONEX_CONFIG.API_URL)
+    || window.ECONEX_API_URL
+    || "http://localhost:3000";
+
+console.log('[ECONEX] API URL:', API_BASE_URL);
 
 let currentStep = 1;
 let analysisType = null;
