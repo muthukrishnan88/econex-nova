@@ -1,4 +1,5 @@
 import { logger } from "../../utils/logger.js";
+import { EvidenceExtractor } from "./evidenceExtractor.js";
 
 /**
  * Evidence-based validation for pollution analysis
@@ -126,34 +127,28 @@ export class EvidenceValidator {
 
     /**
      * Validate evidence matches pollution category
+     * Uses EvidenceExtractor for Material ≠ Pollution logic
      */
     static _validateEvidenceMatch(result, primary) {
         const type = primary.primaryType || primary.type;
-        const evidence = primary.visualEvidence || primary.evidence || [];
 
-        // Define required evidence keywords for each category
-        const evidenceRules = {
-            air_pollution: ["smoke", "emission", "haze", "burning", "plume", "atmospheric"],
-            water_pollution: ["water", "contaminated", "discharge", "sewage", "oil", "floating"],
-            land_pollution: ["waste", "dumping", "accumulation", "contaminated soil", "litter"],
-            plastic_pollution: ["plastic", "bottles", "bags", "containers", "waste"],
-            open_waste_burning: ["fire", "burning", "smoke", "flame"],
-            industrial_pollution: ["industrial", "factory", "smokestack", "facility"],
-            oil_contamination: ["oil", "sheen", "petroleum", "spill"],
-            sewage_pollution: ["sewage", "wastewater", "discharge", "drainage"]
-        };
+        // Extract visible evidence
+        const visibleEvidence = EvidenceExtractor.extractVisibleEvidence(result);
 
-        const requiredKeywords = evidenceRules[type] || [];
-        const evidenceText = evidence.join(" ").toLowerCase();
+        // Validate Material vs Pollution
+        const validation = EvidenceExtractor.validateMaterialVsPollution(visibleEvidence, type);
 
-        // Check if evidence contains required keywords
-        const hasMatchingEvidence = requiredKeywords.some(keyword =>
-            evidenceText.includes(keyword.toLowerCase())
-        );
+        if (!validation.valid) {
+            logger.warn(`Material ≠ Pollution validation failed: ${validation.reason}`);
+            logger.warn(`Rejecting ${type} classification`);
 
-        if (!hasMatchingEvidence && requiredKeywords.length > 0) {
-            logger.warn(`Evidence may not match pollution type: ${type}`);
-            // Don't reject, but log warning
+            // Downgrade to NO_CLEAR_POLLUTION
+            result.pollutionDetected = false;
+            result.reason = validation.reason;
+            delete result.pollution;
+            delete result.primaryPollution;
+        } else {
+            logger.info(`Evidence validation passed: ${validation.reason}`);
         }
 
         return result;
