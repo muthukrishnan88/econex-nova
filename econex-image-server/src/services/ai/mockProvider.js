@@ -1,10 +1,30 @@
 import { logger } from "../../utils/logger.js";
+import crypto from "crypto";
 
 export class MockAIProvider {
     constructor() {
         this.name = "Mock AI Provider";
         this.scenarioIndex = 0; // Track which scenario to return
-        logger.info("Mock AI Provider initialized (Development Mode)");
+
+        // Reference image hashes for accurate testing
+        this.referenceImages = {
+            // Air pollution - fire/burning
+            '5b04b4a1744554eed78c2c5e76fcc2a34625bdf91c6b071f03dd1ee77d0e6125': 'air',
+            // Water pollution 1
+            '6932ca6d681c0ff9a1dd50e89b56afd712d043a698c08c7141d3f16337efd847': 'water',
+            // Soil/Land pollution 1
+            '655370580859df009a62b47fe174b382a942e18dc65001ec83703beb40bf9b79': 'soil',
+            // Soil/Land pollution 2
+            'fd83da2631de8db6596e8811f7d29e6d29a32b74256ca4f5d0fe2107edd9ae00': 'soil',
+            // Water pollution 2
+            '6d86b434746f8aed8924b8706c1436cc2b8e3af98560145b8c75b5e15e6365ff': 'water'
+        };
+
+        logger.info("Mock AI Provider initialized (Development Mode with Reference Images)");
+    }
+
+    _calculateImageHash(imageBuffer) {
+        return crypto.createHash('sha256').update(imageBuffer).digest('hex');
     }
 
     async verifyImageAuthenticity(imageBuffer, mimeType) {
@@ -122,6 +142,10 @@ export class MockAIProvider {
     async analyzePollution(imageBuffer, mimeType) {
         await this._simulateDelay();
 
+        // Calculate image hash to check if it's a reference image
+        const imageHash = this._calculateImageHash(imageBuffer);
+        const referenceType = this.referenceImages[imageHash];
+
         // Evidence-first simulation
         // In real use, this would analyze actual image content
         // For demo, we intelligently select scenarios or return "no pollution detected"
@@ -184,10 +208,26 @@ export class MockAIProvider {
             };
         }
 
-        // Return scenario in predictable order (cycles through scenarios)
-        const scenarios = this._getPollutionScenarios();
-        const scenario = scenarios[this.scenarioIndex % scenarios.length];
-        this.scenarioIndex++; // Next upload gets next scenario
+        // Check if this is a reference image
+        let scenario;
+        if (referenceType) {
+            // Use reference-specific scenario
+            const scenarios = this._getPollutionScenarios();
+            const typeMap = {
+                'air': 0,    // Air pollution scenario
+                'water': 1,  // Water pollution scenario
+                'soil': 3    // Soil pollution scenario
+            };
+            const scenarioIndex = typeMap[referenceType];
+            scenario = scenarios[scenarioIndex];
+            logger.info(`Reference image detected: ${referenceType} pollution (hash: ${imageHash.substring(0, 16)}...)`);
+        } else {
+            // For non-reference images, cycle through scenarios
+            const scenarios = this._getPollutionScenarios();
+            scenario = scenarios[this.scenarioIndex % scenarios.length];
+            this.scenarioIndex++; // Next upload gets next scenario
+            logger.info(`Non-reference image, using scenario ${this.scenarioIndex - 1}`);
+        }
 
         const scene = {
             description: scenario.sceneDescription || "Environmental scene with visible pollution indicators.",
