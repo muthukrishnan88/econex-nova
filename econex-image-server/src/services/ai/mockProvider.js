@@ -9,12 +9,9 @@ export class MockAIProvider {
     async verifyImageAuthenticity(imageBuffer, mimeType) {
         await this._simulateDelay();
 
-        // Basic image analysis
         const fileSize = imageBuffer.length;
         const sizeKB = Math.round(fileSize / 1024);
 
-        // Simple heuristics (not real AI detection)
-        // Very small images are suspicious
         if (fileSize < 10000) {
             return {
                 imageType: "uncertain",
@@ -25,11 +22,8 @@ export class MockAIProvider {
             };
         }
 
-        // Check filename patterns in future if passed
-        // For now, randomized but weighted towards accepting
         const random = Math.random();
 
-        // 15% chance of AI-generated detection (for testing)
         if (random < 0.15) {
             return {
                 imageType: "ai_generated",
@@ -41,18 +35,16 @@ export class MockAIProvider {
             };
         }
 
-        // 10% uncertain
         if (random < 0.25) {
             return {
                 imageType: "uncertain",
                 confidence: Math.floor(48 + Math.random() * 15),
-                accepted: true, // Allow in dev mode
+                accepted: true,
                 message: "Image authenticity could not be verified with high confidence. Proceeding with analysis in development mode.",
                 isDevelopmentMode: true
             };
         }
 
-        // 75% original (most common)
         return {
             imageType: "original",
             confidence: Math.floor(86 + Math.random() * 12),
@@ -69,12 +61,57 @@ export class MockAIProvider {
     async analyzeWaste(imageBuffer, mimeType) {
         await this._simulateDelay();
 
-        // Generate varied realistic scenarios
         const scenarios = this._getWasteScenarios();
         const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
 
+        const totalObjects = scenario.objects.length;
+        const totalWeight = scenario.objects.reduce((sum, obj) => sum + (obj.weight.estimatedGrams || 0), 0);
+        const minWeight = Math.floor(totalWeight * 0.75);
+        const maxWeight = Math.floor(totalWeight * 1.35);
+
+        const materialCounts = {};
+        scenario.objects.forEach(obj => {
+            const baseMaterial = obj.material;
+            materialCounts[baseMaterial] = (materialCounts[baseMaterial] || 0) + 1;
+        });
+
+        const materialBreakdown = Object.entries(materialCounts).map(([material, count]) => ({
+            material,
+            count,
+            percentage: Math.round((count / totalObjects) * 100)
+        })).sort((a, b) => b.count - a.count);
+
+        const imageQuality = {
+            score: 75 + Math.floor(Math.random() * 20),
+            status: "good",
+            resolution: "adequate",
+            lighting: "sufficient",
+            clarity: "clear"
+        };
+
         return {
-            ...scenario,
+            success: true,
+            analysisMode: "AI",
+            imageQuality,
+            summary: {
+                totalObjects,
+                estimatedTotalWeightGrams: totalWeight,
+                estimatedWeightRange: {
+                    minGrams: minWeight,
+                    maxGrams: maxWeight
+                }
+            },
+            objects: scenario.objects,
+            materialBreakdown,
+            greenImpactScore: scenario.greenImpactScore,
+            impactExplanation: scenario.impactExplanation,
+            actionPlan: scenario.actionPlan,
+            limitations: [
+                "Weight is visually estimated from image analysis.",
+                "Object detection confidence depends on image quality and object visibility.",
+                "Recycling availability and requirements vary by location.",
+                "Environmental impact scores are AI-generated indicators, not scientific measurements."
+            ],
             isDevelopmentMode: true,
             demo: true,
             note: "Development Mode: This is simulated analysis. Connect AWS Bedrock or another vision AI provider for real image analysis."
@@ -97,479 +134,469 @@ export class MockAIProvider {
 
     _getWasteScenarios() {
         return [
-            // Scenario 1: Mixed waste - Multiple items
+            // Scenario 1: Mixed household waste
             {
                 objects: [
                     {
-                        name: "Plastic bottle",
-                        material: "PET Plastic",
-                        quantity: 5,
-                        quantityConfidence: 86,
-                        estimatedWeightGrams: 150,
-                        weightConfidence: 62,
+                        name: "Plastic Bottle",
+                        material: "Plastic",
+                        subtype: "PET",
+                        quantity: 3,
+                        detectionConfidence: 95,
+                        weight: {
+                            estimatedGrams: 75,
+                            minGrams: 55,
+                            maxGrams: 100,
+                            confidence: 70
+                        },
                         biodegradable: false,
                         recyclable: true,
-                        recyclabilityScore: 92,
-                        environmentalImpact: "PET plastic can persist in the environment for hundreds of years if not properly recycled. When degraded, it breaks into microplastics that contaminate soil and water systems, entering food chains and affecting wildlife.",
-                        recyclingMethod: "1. Empty all liquid content completely. 2. Remove cap and label if possible. 3. Rinse the bottle with water. 4. Flatten to save space. 5. Place in designated PET/plastic recycling bin. Look for recycling symbol #1. Most municipal recycling programs accept PET bottles."
+                        recyclabilityScore: 85,
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "PET plastic persists for centuries in the environment. Breaks down into microplastics that contaminate ecosystems and food chains. However, PET is highly recyclable when properly collected.",
+                        recyclingMethod: "Empty completely, rinse, remove cap, flatten, and place in PET/plastic recycling bin (look for #1 symbol).",
+                        reuseIdeas: [
+                            "Refill for water storage in gardening",
+                            "Cut and use as DIY planters",
+                            "Use for craft projects or organizers"
+                        ],
+                        disposalMethod: "If recycling unavailable, dispose in general waste. Never burn or dump in waterways.",
+                        recommendedAction: "Separate, rinse, and recycle through appropriate PET collection program."
                     },
                     {
-                        name: "Aluminium can",
-                        material: "Aluminium",
-                        quantity: 4,
-                        quantityConfidence: 91,
-                        estimatedWeightGrams: 60,
-                        weightConfidence: 68,
+                        name: "Aluminium Can",
+                        material: "Metal",
+                        subtype: "Aluminium",
+                        quantity: 2,
+                        detectionConfidence: 91,
+                        weight: {
+                            estimatedGrams: 28,
+                            minGrams: 22,
+                            maxGrams: 35,
+                            confidence: 75
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 98,
-                        environmentalImpact: "Aluminium production from raw ore requires massive energy consumption and generates significant environmental impact. However, aluminium is infinitely recyclable without quality loss. Recycling aluminium saves 95% of the energy needed for primary production and reduces greenhouse gas emissions substantially.",
-                        recyclingMethod: "1. Empty the can completely. 2. Rinse to remove beverage residue. 3. You can crush/flatten cans to save storage space (check local guidelines). 4. Place in metal/aluminium recycling container. Aluminium has high scrap value and is one of the most economically recyclable materials."
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Aluminium is infinitely recyclable. Recycling saves 95% energy vs virgin production. Can be recycled and back on shelf within 60 days.",
+                        recyclingMethod: "Empty, rinse, crush if desired, place in metal recycling. Leave tab attached.",
+                        reuseIdeas: [
+                            "Small planters with drainage",
+                            "DIY candle holders",
+                            "Storage for small items"
+                        ],
+                        disposalMethod: "Aluminium has high scrap value—recycling almost always available.",
+                        recommendedAction: "Rinse and place in metal recycling for maximum resource recovery."
                     },
                     {
-                        name: "Plastic bag",
-                        material: "LDPE Plastic",
-                        quantity: 8,
-                        quantityConfidence: 73,
-                        estimatedWeightGrams: 45,
-                        weightConfidence: 52,
-                        biodegradable: false,
-                        recyclable: false,
-                        recyclabilityScore: 22,
-                        environmentalImpact: "Plastic bags cause severe environmental damage. They clog drainage systems, harm marine life through ingestion and entanglement, break down into microplastics, and persist for decades. Single-use plastic bags are one of the most common forms of litter worldwide.",
-                        recyclingMethod: "Most curbside programs don't accept plastic bags. Options: 1. Check if local grocery stores have plastic film collection bins. 2. Reuse bags multiple times before disposal. 3. Switch to reusable cloth bags. 4. If no recycling available, dispose in regular waste—never place in recycling bin as they jam sorting equipment."
-                    },
-                    {
-                        name: "Food container",
-                        material: "Polystyrene (Styrofoam)",
-                        quantity: 2,
-                        quantityConfidence: 79,
-                        estimatedWeightGrams: 35,
-                        weightConfidence: 48,
-                        biodegradable: false,
-                        recyclable: false,
-                        recyclabilityScore: 8,
-                        environmentalImpact: "Polystyrene (styrofoam) is extremely problematic. It's non-biodegradable, breaks into small pieces easily, leaches chemicals into food and environment, and is rarely recyclable. It makes up significant volume in landfills despite light weight.",
-                        recyclingMethod: "Most municipalities do NOT accept polystyrene for recycling. 1. Check for specialized polystyrene recycling locations (rare). 2. Avoid purchasing products with styrofoam packaging. 3. Choose restaurants and products using alternative packaging. 4. Dispose as regular waste if no recycling option exists."
-                    },
-                    {
-                        name: "Glass jar",
-                        material: "Glass",
-                        quantity: 2,
-                        quantityConfidence: 88,
-                        estimatedWeightGrams: 380,
-                        weightConfidence: 64,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 97,
-                        environmentalImpact: "Glass is inert and doesn't leach chemicals, but persists indefinitely in environment. Glass production requires high energy. However, glass can be recycled infinitely without quality degradation, making it excellent for circular economy when recycled properly.",
-                        recyclingMethod: "1. Remove lids and caps. 2. Rinse to remove food residue. 3. Labels usually don't need removal. 4. Keep different glass types separate if required (bottles vs jars). 5. Never include window glass, ceramics, or Pyrex with container glass. 6. Place in glass recycling."
-                    },
-                    {
-                        name: "Cardboard packaging",
-                        material: "Corrugated Cardboard",
-                        quantity: 3,
-                        quantityConfidence: 84,
-                        estimatedWeightGrams: 280,
-                        weightConfidence: 56,
+                        name: "Cardboard Box",
+                        material: "Paper",
+                        subtype: "Corrugated Cardboard",
+                        quantity: 1,
+                        detectionConfidence: 88,
+                        weight: {
+                            estimatedGrams: 320,
+                            minGrams: 250,
+                            maxGrams: 400,
+                            confidence: 65
+                        },
                         biodegradable: true,
                         recyclable: true,
                         recyclabilityScore: 94,
-                        environmentalImpact: "Cardboard production uses trees, water, and energy. When landfilled, cardboard produces methane during decomposition. Recycling cardboard reduces deforestation, saves energy and water, and keeps organic material out of landfills.",
-                        recyclingMethod: "1. Remove all tape, labels, staples. 2. Flatten boxes completely. 3. Keep dry—wet cardboard contaminates recycling. 4. Remove any food contamination. 5. Bundle flat or place in paper recycling. 6. Cardboard can be recycled 5-7 times."
-                    }
-                ],
-                greenImpactScore: 76,
-                impactExplanation: "This mixed waste stream contains highly recyclable materials (aluminium, glass, cardboard, PET bottles) alongside difficult-to-recycle items (plastic bags, styrofoam). Proper separation significantly improves recycling outcomes and reduces environmental impact.",
-                actionPlan: [
-                    "Separate highly recyclable items: aluminium cans, glass jars, PET bottles, cardboard",
-                    "Rinse all food/beverage containers before recycling",
-                    "Check if plastic bags can be returned to grocery store collection bins",
-                    "Dispose non-recyclable items (styrofoam) in regular waste, not recycling",
-                    "Flatten cardboard and remove tape/staples",
-                    "Deliver sorted recyclables to appropriate collection points",
-                    "Consider reducing future use of non-recyclable packaging"
-                ]
-            },
-
-            // Scenario 2: Paper, cardboard, and organic waste
-            {
-                objects: [
-                    {
-                        name: "Cardboard box",
-                        material: "Corrugated Cardboard",
-                        quantity: 4,
-                        quantityConfidence: 89,
-                        estimatedWeightGrams: 620,
-                        weightConfidence: 58,
-                        biodegradable: true,
-                        recyclable: true,
-                        recyclabilityScore: 95,
-                        environmentalImpact: "Cardboard production requires significant forest resources and water. Improper disposal leads to landfill waste and methane emissions during decomposition. However, cardboard is highly recyclable and biodegradable when composted properly.",
-                        recyclingMethod: "1. Remove all tape, labels, and non-paper materials. 2. Flatten the box completely. 3. Ensure cardboard is clean and dry (wet or food-contaminated cardboard cannot be recycled). 4. Bundle with string or place in paper recycling bin. 5. Cardboard can be recycled 5-7 times before fiber quality degrades."
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Cardboard production uses trees and water. Recycling reduces deforestation and saves energy. Landfilled cardboard produces methane.",
+                        recyclingMethod: "Remove tape and labels, flatten completely, keep dry, place in paper recycling.",
+                        reuseIdeas: [
+                            "Storage boxes for organizing",
+                            "DIY furniture or cat houses",
+                            "Composting material (shredded)",
+                            "Protective packaging for shipping"
+                        ],
+                        disposalMethod: "Compost if shredded, or dispose in general waste if contaminated.",
+                        recommendedAction: "Flatten and recycle—cardboard can be recycled 5-7 times."
                     },
                     {
-                        name: "Newspaper/Magazine",
-                        material: "Paper",
-                        quantity: 12,
-                        quantityConfidence: 81,
-                        estimatedWeightGrams: 340,
-                        weightConfidence: 52,
-                        biodegradable: true,
-                        recyclable: true,
-                        recyclabilityScore: 89,
-                        environmentalImpact: "Paper production consumes trees, water, and energy. Newspaper ink was historically toxic but modern soy-based inks are safer. Recycling paper reduces deforestation pressure, saves water and energy, and decreases landfill volume.",
-                        recyclingMethod: "1. Keep newspapers dry and bundled. 2. Remove any plastic bags or non-paper inserts. 3. Glossy magazine paper is recyclable with regular paper. 4. Wet or moldy paper should be composted, not recycled. 5. Place in paper recycling collection."
-                    },
-                    {
-                        name: "Office paper",
-                        material: "White Paper",
-                        quantity: 28,
-                        quantityConfidence: 77,
-                        estimatedWeightGrams: 185,
-                        weightConfidence: 46,
-                        biodegradable: true,
-                        recyclable: true,
-                        recyclabilityScore: 92,
-                        environmentalImpact: "White office paper is high-quality fiber with excellent recycling potential. Bleaching process uses chemicals but recycled paper reduces virgin pulp demand significantly. One ton of recycled paper saves approximately 17 trees.",
-                        recyclingMethod: "1. Remove staples, paper clips, and binder clips. 2. Plastic covers and spiral bindings must be removed. 3. Small amounts of ink/toner are acceptable. 4. Shredded paper can be recycled—place in paper bag or bundle. 5. Keep dry and place in paper recycling."
-                    },
-                    {
-                        name: "Paper cups",
-                        material: "Paper with Plastic Lining",
-                        quantity: 6,
-                        quantityConfidence: 83,
-                        estimatedWeightGrams: 95,
-                        weightConfidence: 54,
-                        biodegradable: false,
-                        recyclable: false,
-                        recyclabilityScore: 18,
-                        environmentalImpact: "Most paper cups have thin plastic or wax lining making them non-recyclable in standard programs. Despite appearing paper-based, this mixed material requires specialized processing rarely available. Billions of paper cups end up in landfills annually.",
-                        recyclingMethod: "Most paper cups CANNOT be recycled in regular paper streams due to plastic lining. 1. Check if specialized cup recycling exists in your area (rare). 2. Some cities have commercial composting that accepts lined cups. 3. Best solution: use reusable cups. 4. If no option exists, dispose as regular waste."
-                    },
-                    {
-                        name: "Food waste",
-                        material: "Organic material",
+                        name: "Food Waste",
+                        material: "Organic",
+                        subtype: "Mixed Food Scraps",
                         quantity: 1,
-                        quantityConfidence: 68,
-                        estimatedWeightGrams: 520,
-                        weightConfidence: 41,
+                        detectionConfidence: 84,
+                        weight: {
+                            estimatedGrams: 450,
+                            minGrams: 300,
+                            maxGrams: 620,
+                            confidence: 55
+                        },
                         biodegradable: true,
                         recyclable: false,
                         recyclabilityScore: 0,
-                        environmentalImpact: "Food waste in landfills generates methane, a greenhouse gas 25 times more potent than CO2. Wasted food represents wasted water, energy, land, and resources used in production. Globally, food waste contributes 8-10% of greenhouse gas emissions.",
-                        recyclingMethod: "Food waste should be composted, not recycled. 1. Separate organic matter from all packaging. 2. Home compost: vegetables, fruit, coffee grounds, eggshells. 3. Avoid: meat, dairy, oils (attract pests in home systems). 4. Municipal organics collection accepts all food. 5. Industrial composting handles meat/dairy."
-                    }
-                ],
-                greenImpactScore: 82,
-                impactExplanation: "This waste stream is predominantly recyclable and compostable with proper separation. Paper and cardboard have high recycling rates. Organic waste should be composted. Paper cups require special handling. Correct sorting maximizes resource recovery.",
-                actionPlan: [
-                    "Separate high-quality recyclable paper (office paper, newspaper) from cardboard",
-                    "Remove all non-paper items: staples, plastic, binder clips",
-                    "Flatten cardboard boxes and bundle paper materials",
-                    "Compost food waste separately—never mix with paper recycling",
-                    "Dispose paper cups in regular waste unless specialized recycling available",
-                    "Keep all paper materials dry until collection",
-                    "Consider reducing paper cup use with reusable alternatives"
-                ]
-            },
-
-            // Scenario 3: Kitchen and food-related waste
-            {
-                objects: [
-                    {
-                        name: "Plastic bottle (beverage)",
-                        material: "PET Plastic",
-                        quantity: 7,
-                        quantityConfidence: 88,
-                        estimatedWeightGrams: 210,
-                        weightConfidence: 61,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 93,
-                        environmentalImpact: "PET plastic persists for centuries. Breaks down into microplastics contaminating ecosystems. However, PET has high recycling value and can be reprocessed into new bottles, clothing fibers, and other products.",
-                        recyclingMethod: "1. Empty completely and rinse. 2. Remove caps (often different plastic type). 3. Remove labels if easy. 4. Flatten to save space. 5. Place in PET/plastic recycling. Check for #1 recycling symbol."
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "Food waste in landfills generates methane (28-34x more potent than CO2). Represents wasted water, energy, and resources used in production.",
+                        recyclingMethod: "Food should be composted, not recycled. Separate from all packaging.",
+                        reuseIdeas: [
+                            "Home compost for garden soil amendment",
+                            "Vermicomposting with worms",
+                            "Animal feed where appropriate"
+                        ],
+                        disposalMethod: "Compost in home system or municipal organics program. If unavailable, dispose in general waste.",
+                        recommendedAction: "Separate and compost to prevent methane emissions and create nutrient-rich soil."
                     },
                     {
-                        name: "Food containers (takeout)",
-                        material: "Polypropylene (PP)",
+                        name: "Plastic Bag",
+                        material: "Plastic",
+                        subtype: "LDPE",
                         quantity: 5,
-                        quantityConfidence: 76,
-                        estimatedWeightGrams: 180,
-                        weightConfidence: 49,
+                        detectionConfidence: 76,
+                        weight: {
+                            estimatedGrams: 35,
+                            minGrams: 25,
+                            maxGrams: 50,
+                            confidence: 58
+                        },
                         biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 68,
-                        environmentalImpact: "PP containers are better than styrofoam but still create plastic waste. Many programs now accept PP (#5) but check locally. Reusable containers are vastly preferable to single-use.",
-                        recyclingMethod: "1. Remove all food residue—contaminated containers ruin recycling batches. 2. Check local program accepts #5 plastic. 3. Stack containers to save space. 4. If program doesn't accept PP, dispose as regular waste."
+                        recyclable: false,
+                        recyclabilityScore: 22,
+                        environmentalRisk: "High",
+                        environmentalImpact: "Plastic bags cause severe environmental damage. They clog drainage systems, harm marine life, break down into microplastics, and persist for decades.",
+                        recyclingMethod: "Most curbside programs don't accept. Check if local grocery stores have plastic film collection bins.",
+                        reuseIdeas: [
+                            "Reuse for shopping multiple times",
+                            "Use as trash can liners",
+                            "Packing material when moving"
+                        ],
+                        disposalMethod: "Return to store collection if available, otherwise general waste. Switch to reusable bags.",
+                        recommendedAction: "Reuse multiple times, return to store collection, or switch to reusable cloth bags."
                     },
                     {
-                        name: "Aluminium foil/trays",
-                        material: "Aluminium",
-                        quantity: 3,
-                        quantityConfidence: 82,
-                        estimatedWeightGrams: 75,
-                        weightConfidence: 58,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 89,
-                        environmentalImpact: "Aluminium foil and trays are recyclable but often contaminated with food. Clean aluminium recycles well. Crumpled foil is hard to sort mechanically—ball up small pieces together for better recycling.",
-                        recyclingMethod: "1. Scrape off food residue. 2. Rinse if heavily contaminated. 3. Ball up small foil pieces into golf-ball size for easier sorting. 4. Clean foil trays can be recycled. 5. Place with metal recycling."
-                    },
-                    {
-                        name: "Glass bottles/jars",
+                        name: "Glass Jar",
                         material: "Glass",
-                        quantity: 4,
-                        quantityConfidence: 91,
-                        estimatedWeightGrams: 720,
-                        weightConfidence: 67,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 97,
-                        environmentalImpact: "Glass is infinitely recyclable without quality loss. Inert and doesn't leach chemicals. However, glass is heavy (transportation impact) and requires high heat for processing.",
-                        recyclingMethod: "1. Remove lids/caps. 2. Rinse clean. 3. Labels usually okay to leave on. 4. Don't break—whole containers are safer and easier to process. 5. Separate by color if required locally. 6. Place in glass recycling."
-                    },
-                    {
-                        name: "Food waste (organic)",
-                        material: "Organic material",
-                        quantity: 1,
-                        quantityConfidence: 72,
-                        estimatedWeightGrams: 680,
-                        weightConfidence: 38,
-                        biodegradable: true,
-                        recyclable: false,
-                        recyclabilityScore: 0,
-                        environmentalImpact: "Food waste creates methane in landfills (28-34x more potent than CO2 over 100 years). Represents wasted water, energy, land, labor, and resources. One-third of food produced globally is wasted.",
-                        recyclingMethod: "Compost, don't recycle. 1. Separate from ALL packaging. 2. Home compost: veggie/fruit scraps, coffee grounds, eggshells. 3. Avoid in home compost: meat, dairy, oils, bones. 4. Municipal/industrial compost accepts all food. 5. Creates nutrient-rich soil amendment."
-                    },
-                    {
-                        name: "Plastic utensils",
-                        material: "Polystyrene/Mixed Plastic",
-                        quantity: 12,
-                        quantityConfidence: 79,
-                        estimatedWeightGrams: 85,
-                        weightConfidence: 53,
-                        biodegradable: false,
-                        recyclable: false,
-                        recyclabilityScore: 5,
-                        environmentalImpact: "Single-use plastic utensils are environmental disaster. Lightweight so easily enter waterways. Break into microplastics. Rarely recyclable. Often made from mixed plastics impossible to reprocess.",
-                        recyclingMethod: "Most plastic utensils CANNOT be recycled. 1. Reusable utensils are only sustainable option. 2. If disposable needed, choose compostable bamboo or wood. 3. Plastic utensils go in regular trash. 4. Never place in recycling—contaminates batches."
-                    },
-                    {
-                        name: "Cardboard (pizza boxes)",
-                        material: "Grease-contaminated Cardboard",
+                        subtype: "Clear Glass",
                         quantity: 2,
-                        quantityConfidence: 84,
-                        estimatedWeightGrams: 290,
-                        weightConfidence: 55,
-                        biodegradable: true,
-                        recyclable: false,
-                        recyclabilityScore: 35,
-                        environmentalImpact: "Grease-soaked cardboard contaminates recycling batches. Grease doesn't separate in pulping process. However, greasy cardboard can be composted in many systems.",
-                        recyclingMethod: "Grease-contaminated cardboard usually not recyclable. 1. Tear off clean sections (lid)—recycle those. 2. Compost greasy bottom portion if accepted locally. 3. If composting unavailable, dispose as regular waste. 4. NEVER place greasy cardboard in paper recycling."
-                    }
-                ],
-                greenImpactScore: 71,
-                impactExplanation: "Mixed kitchen waste requires careful sorting. High-value recyclables (glass, aluminium, clean PET) should be separated from contaminated items (greasy cardboard, plastic utensils) and compostable organics (food waste). Proper separation significantly improves recycling outcomes.",
-                actionPlan: [
-                    "Rinse ALL food containers before recycling—contamination ruins entire batches",
-                    "Separate food waste for composting (home or municipal program)",
-                    "Group recyclables: PET bottles together, glass together, metal together",
-                    "Remove greasy sections from cardboard—compost or trash greasy parts",
-                    "Dispose non-recyclable items (plastic utensils) in regular waste",
-                    "Ball up small foil pieces for easier mechanical sorting",
-                    "Consider reusable alternatives to reduce single-use packaging"
-                ]
-            },
-
-            // Scenario 4: Beverage containers and packaging
-            {
-                objects: [
-                    {
-                        name: "Glass bottles (clear)",
-                        material: "Clear Glass",
-                        quantity: 6,
-                        quantityConfidence: 93,
-                        estimatedWeightGrams: 950,
-                        weightConfidence: 72,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 98,
-                        environmentalImpact: "Glass is inert and does not degrade, so it persists indefinitely in landfills. However, glass is 100% recyclable without quality loss and can be recycled endlessly. Recycling glass saves raw materials (sand, soda ash, limestone), reduces energy consumption by 30%, and prevents mining environmental damage.",
-                        recyclingMethod: "1. Remove caps, lids, and cork stoppers. 2. Rinse bottles to remove contents. 3. Labels usually don't need removal (burned off during recycling). 4. Separate by color if required (clear, brown, green). 5. Do not include window glass, ceramics, or heat-resistant glass (Pyrex) in bottle recycling. 6. Place in glass recycling container."
-                    },
-                    {
-                        name: "Glass bottles (colored)",
-                        material: "Colored Glass",
-                        quantity: 4,
-                        quantityConfidence: 89,
-                        estimatedWeightGrams: 780,
-                        weightConfidence: 68,
+                        detectionConfidence: 89,
+                        weight: {
+                            estimatedGrams: 420,
+                            minGrams: 350,
+                            maxGrams: 500,
+                            confidence: 68
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 97,
-                        environmentalImpact: "Colored glass (brown, green, amber) is used for light-sensitive products. Fully recyclable but sometimes requires color separation. Recycling maintains color properties for new containers.",
-                        recyclingMethod: "1. Remove all closures. 2. Rinse clean. 3. Some facilities want colored glass separate from clear. 4. Labels okay to leave. 5. Never mix with drinking glasses, ceramics, or window glass. 6. Place in appropriate glass recycling."
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Glass is inert and doesn't leach chemicals, but persists indefinitely. Glass can be recycled infinitely without quality degradation.",
+                        recyclingMethod: "Remove lids, rinse, labels usually don't need removal, place in glass recycling.",
+                        reuseIdeas: [
+                            "Storage for dry goods or leftovers",
+                            "DIY candle holders",
+                            "Vases for flowers",
+                            "Drinking glasses"
+                        ],
+                        disposalMethod: "If recycling unavailable, dispose carefully in general waste.",
+                        recommendedAction: "Rinse and recycle—glass recycling is infinitely sustainable."
                     },
                     {
-                        name: "Plastic bottle caps",
-                        material: "HDPE/PP Plastic",
-                        quantity: 10,
-                        quantityConfidence: 82,
-                        estimatedWeightGrams: 65,
-                        weightConfidence: 56,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 75,
-                        environmentalImpact: "Bottle caps are often different plastic than bottles (HDPE/PP vs PET). Small caps can jam sorting equipment. However, many facilities now accept caps if left on bottles.",
-                        recyclingMethod: "Modern guidance: Leave caps ON bottles when recycling (easier to capture). Some older programs want caps separate. 1. Check local guidance. 2. If removing, collect caps in larger container for recycling. 3. Loose caps may fall through sorting equipment."
-                    },
-                    {
-                        name: "Aluminium cans",
-                        material: "Aluminium",
+                        name: "Paper",
+                        material: "Paper",
+                        subtype: "Mixed Paper",
                         quantity: 8,
-                        quantityConfidence: 94,
-                        estimatedWeightGrams: 120,
-                        weightConfidence: 71,
-                        biodegradable: false,
+                        detectionConfidence: 82,
+                        weight: {
+                            estimatedGrams: 120,
+                            minGrams: 90,
+                            maxGrams: 160,
+                            confidence: 62
+                        },
+                        biodegradable: true,
                         recyclable: true,
-                        recyclabilityScore: 99,
-                        environmentalImpact: "Aluminium cans have highest recycling value. Infinitely recyclable. Recycling saves 95% energy vs virgin production. Can be recycled and back on shelf as new can within 60 days.",
-                        recyclingMethod: "1. Empty completely and rinse. 2. Crushing okay but not required. 3. Leave tabs attached. 4. High scrap value ensures strong recycling market. 5. Place in metal/aluminium recycling."
-                    },
-                    {
-                        name: "Steel/tin cans",
-                        material: "Steel",
-                        quantity: 3,
-                        quantityConfidence: 87,
-                        estimatedWeightGrams: 185,
-                        weightConfidence: 63,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 96,
-                        environmentalImpact: "Steel cans are magnetic and easily sorted. Highly recyclable. Steel recycling prevents mining, saves energy, reduces CO2 emissions. Tin coating doesn't affect recycling.",
-                        recyclingMethod: "1. Remove paper labels (optional). 2. Rinse to remove food residue. 3. Leave both ends if cutting can open. 4. Magnets separate steel from aluminium automatically. 5. Place in metal recycling."
-                    },
-                    {
-                        name: "Carton containers (Tetra Pak)",
-                        material: "Multi-layer (paper/plastic/aluminium)",
-                        quantity: 5,
-                        quantityConfidence: 78,
-                        estimatedWeightGrams: 240,
-                        weightConfidence: 51,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 52,
-                        environmentalImpact: "Drink cartons are multi-layer: paperboard + plastic + aluminium foil. Recycling requires specialized facilities to separate layers. Not all municipalities accept. Better than single-use plastic but challenging to recycle.",
-                        recyclingMethod: "1. Check if local program accepts cartons (not universal). 2. Rinse and flatten. 3. Remove straws/caps (different material). 4. Look for carton recycling symbol. 5. If not accepted, dispose as regular waste—don't contaminate paper recycling."
+                        recyclabilityScore: 88,
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Paper production consumes trees and water. Recycling reduces deforestation and saves energy. One ton of recycled paper saves approximately 17 trees.",
+                        recyclingMethod: "Remove staples and paper clips, keep dry, place in paper recycling.",
+                        reuseIdeas: [
+                            "Use blank side for notes or printing",
+                            "Shred for packing material",
+                            "Composting material",
+                            "Craft projects"
+                        ],
+                        disposalMethod: "Compost if shredded, or dispose in general waste if contaminated.",
+                        recommendedAction: "Keep dry and recycle—paper can be recycled 5-7 times."
                     }
                 ],
-                greenImpactScore: 89,
-                impactExplanation: "Beverage container mix with high recyclability. Glass and aluminium are top-tier recyclables. Steel cans recycle well. Tetra Paks require special handling. Proper sorting and rinsing maximize recycling success.",
+                greenImpactScore: 78,
+                impactExplanation: "Mixed recyclable materials with good separation potential. Proper sorting enables high material recovery rates and significant environmental benefits.",
                 actionPlan: [
-                    "Rinse all beverage containers thoroughly",
-                    "Separate glass by color if required by local facility",
-                    "Leave caps on plastic bottles (modern guideline) or follow local rules",
-                    "Group metal cans together (aluminium and steel will be separated automatically)",
-                    "Flatten Tetra Pak cartons after rinsing",
-                    "Verify local program accepts cartons before placing in recycling",
-                    "Deliver sorted containers to designated recycling points"
+                    "Separate recyclables immediately: plastic, metal, cardboard, glass, paper",
+                    "Rinse all containers before recycling to prevent contamination",
+                    "Compost food waste separately—never mix with recyclables",
+                    "Flatten cardboard to save space and improve collection efficiency",
+                    "Return plastic bags to store collection bins or switch to reusable",
+                    "Keep paper materials dry until collection",
+                    "Consider reducing single-use packaging purchases"
                 ]
             },
 
-            // Scenario 5: Electronics and mixed household waste
+            // Scenario 2: Electronic waste
             {
                 objects: [
                     {
-                        name: "Mobile phone/Smartphone",
-                        material: "E-Waste (Mixed Electronics)",
-                        quantity: 2,
-                        quantityConfidence: 79,
-                        estimatedWeightGrams: 285,
-                        weightConfidence: 52,
+                        name: "Mobile Phone",
+                        material: "E-Waste",
+                        subtype: "Smartphone",
+                        quantity: 1,
+                        detectionConfidence: 89,
+                        weight: {
+                            estimatedGrams: 175,
+                            minGrams: 140,
+                            maxGrams: 220,
+                            confidence: 62
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 72,
-                        environmentalImpact: "Smartphones contain 40+ elements including gold, silver, copper, rare earths, plus hazardous materials (lithium, lead, mercury). Mining these creates massive environmental damage. One ton of smartphones contains more gold than one ton of gold ore. Improper disposal leaches toxins into soil/water.",
-                        recyclingMethod: "NEVER trash. 1. Factory reset to delete data. 2. Remove SIM/memory cards. 3. Keep chargers with phone. 4. Check manufacturer trade-in/takeback. 5. Electronics retailers often accept. 6. Donate working phones. 7. Use certified e-waste recycler."
+                        environmentalRisk: "High",
+                        environmentalImpact: "Contains 40+ elements including gold, silver, copper, rare earths, plus hazardous materials (lithium, lead, mercury). Improper disposal leaches toxins into soil and water.",
+                        recyclingMethod: "Factory reset to delete data, remove SIM/memory cards, use manufacturer trade-in or certified e-waste recycler.",
+                        reuseIdeas: [
+                            "Donate to charity if functional",
+                            "Repurpose as dedicated music player or camera",
+                            "Use for app testing or educational device"
+                        ],
+                        disposalMethod: "NEVER trash. Use certified e-waste recycling only.",
+                        recommendedAction: "Wipe data, remove cards, and recycle through certified e-waste program."
                     },
                     {
-                        name: "Batteries (mixed types)",
+                        name: "Battery",
                         material: "Hazardous Waste",
-                        quantity: 8,
-                        quantityConfidence: 83,
-                        estimatedWeightGrams: 120,
-                        weightConfidence: 47,
+                        subtype: "Lithium-Ion",
+                        quantity: 3,
+                        detectionConfidence: 85,
+                        weight: {
+                            estimatedGrams: 85,
+                            minGrams: 60,
+                            maxGrams: 115,
+                            confidence: 58
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 68,
-                        environmentalImpact: "Batteries contain heavy metals (mercury, lead, cadmium) and corrosive materials. Landfilled batteries leak toxins contaminating groundwater. Fires at waste facilities often caused by lithium batteries. Recycling recovers valuable materials and prevents pollution.",
-                        recyclingMethod: "NEVER trash batteries. 1. Tape lithium battery terminals (fire risk). 2. Keep different types separate if possible. 3. Many retailers have battery collection boxes. 4. Municipal hazardous waste programs accept. 5. Never incinerate or puncture."
+                        environmentalRisk: "Critical",
+                        environmentalImpact: "Contains heavy metals and corrosive materials. Landfilled batteries leak toxins contaminating groundwater. Lithium batteries cause fires at waste facilities.",
+                        recyclingMethod: "Tape terminals to prevent short circuit. Take to retailer collection box or hazardous waste facility.",
+                        reuseIdeas: [],
+                        disposalMethod: "NEVER trash or incinerate. Use designated battery recycling only.",
+                        recommendedAction: "Tape terminals and take to battery recycling collection point immediately."
                     },
                     {
-                        name: "Cables and chargers",
-                        material: "E-Waste (Wiring/Copper)",
-                        quantity: 6,
-                        quantityConfidence: 75,
-                        estimatedWeightGrams: 240,
-                        weightConfidence: 49,
+                        name: "Charging Cable",
+                        material: "E-Waste",
+                        subtype: "USB Cable",
+                        quantity: 4,
+                        detectionConfidence: 79,
+                        weight: {
+                            estimatedGrams: 120,
+                            minGrams: 90,
+                            maxGrams: 160,
+                            confidence: 65
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 78,
-                        environmentalImpact: "Cables contain copper wire (valuable) wrapped in plastic insulation. Burning cables for copper (common in informal recycling) releases toxic fumes. Proper recycling separates copper from plastic safely.",
-                        recyclingMethod: "1. Bundle cables together. 2. Include with e-waste recycling (don't trash). 3. Scrap metal yards accept copper cables. 4. Some retailers accept cables. 5. Working chargers can be donated."
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "Contains copper wire (valuable) wrapped in plastic insulation. Burning cables for copper releases toxic fumes.",
+                        recyclingMethod: "Bundle together and include with e-waste recycling. Some retailers accept cables.",
+                        reuseIdeas: [
+                            "Donate functional cables to schools or charities",
+                            "Keep as backup cables",
+                            "Use for non-critical charging"
+                        ],
+                        disposalMethod: "Include with e-waste recycling or scrap metal collection.",
+                        recommendedAction: "Bundle cables and recycle with e-waste for copper recovery."
                     },
                     {
-                        name: "Small appliance/gadget",
+                        name: "Electronic Device",
                         material: "E-Waste",
+                        subtype: "Small Appliance",
                         quantity: 1,
-                        quantityConfidence: 68,
-                        estimatedWeightGrams: 620,
-                        weightConfidence: 41,
+                        detectionConfidence: 72,
+                        weight: {
+                            estimatedGrams: 520,
+                            minGrams: 400,
+                            maxGrams: 680,
+                            confidence: 54
+                        },
                         biodegradable: false,
                         recyclable: true,
                         recyclabilityScore: 64,
-                        environmentalImpact: "Small electronics contain circuit boards, metals, plastics, and sometimes hazardous components. Represent significant resource value (metals, rare elements) but require proper disassembly for safe material recovery.",
-                        recyclingMethod: "1. Check if item works—donate if functional. 2. Remove batteries before recycling. 3. E-waste recycling programs accept small appliances. 4. Never place in regular trash. 5. Specialized facilities dismantle and sort materials."
-                    },
-                    {
-                        name: "Plastic packaging (electronics)",
-                        material: "Mixed Plastic",
-                        quantity: 4,
-                        quantityConfidence: 71,
-                        estimatedWeightGrams: 180,
-                        weightConfidence: 44,
-                        biodegradable: false,
-                        recyclable: false,
-                        recyclabilityScore: 18,
-                        environmentalImpact: "Electronic packaging often uses mixed plastics, foam, and multi-layer materials for protection. Rarely recyclable through standard programs. Lightweight foam easily becomes litter.",
-                        recyclingMethod: "1. Check for recycling symbols but most electronics packaging not recyclable. 2. Styrofoam/EPS often not accepted curbside. 3. Some shipping stores accept foam peanuts for reuse. 4. Plastic clamshell packaging usually trash. 5. Cardboard portions can be recycled."
-                    },
-                    {
-                        name: "Lightbulbs (LED/CFL)",
-                        material: "E-Waste/Hazardous",
-                        quantity: 3,
-                        quantityConfidence: 82,
-                        estimatedWeightGrams: 95,
-                        weightConfidence: 56,
-                        biodegradable: false,
-                        recyclable: true,
-                        recyclabilityScore: 58,
-                        environmentalImpact: "CFLs contain mercury (toxic). LEDs contain electronics and metals. Incandescent bulbs are just glass/metal. Broken CFL releases mercury vapor. All bulb types recyclable but require different handling.",
-                        recyclingMethod: "CFL: NEVER trash (mercury hazard). 1. Keep unbroken—place in original packaging. 2. Hardware stores often accept CFLs. 3. Hazardous waste programs accept. LED: E-waste recycling. Incandescent: Some glass recycling accepts, or trash if no option."
+                        environmentalRisk: "High",
+                        environmentalImpact: "Contains circuit boards, metals, plastics, and sometimes hazardous components. Represents significant resource value but requires proper disassembly.",
+                        recyclingMethod: "Remove batteries before recycling. Use e-waste recycling program.",
+                        reuseIdeas: [
+                            "Donate if functional",
+                            "Repair instead of replacing",
+                            "Repurpose components for DIY projects"
+                        ],
+                        disposalMethod: "NEVER place in regular trash. Use specialized e-waste facilities.",
+                        recommendedAction: "Remove batteries and recycle through certified e-waste program."
                     }
                 ],
                 greenImpactScore: 54,
-                impactExplanation: "E-waste and hazardous materials require specialized handling. High resource recovery potential (metals, rare elements) but improper disposal creates severe environmental and health risks. NEVER place in regular trash—use certified recycling programs.",
+                impactExplanation: "E-waste and hazardous materials require specialized handling. High resource recovery potential but improper disposal creates severe environmental and health risks.",
                 actionPlan: [
-                    "Separate e-waste from all other waste—NEVER use regular trash/recycling bins",
-                    "Remove and separately recycle all batteries (fire and toxicity risk)",
-                    "Wipe personal data from electronic devices before recycling",
-                    "Bundle cables together for e-waste collection",
-                    "Locate certified e-waste recycling facility or retailer takeback program",
-                    "Handle CFL bulbs carefully—mercury hazard if broken",
-                    "Donate functional electronics rather than recycling when possible",
-                    "Dispose non-recyclable plastic packaging separately in regular waste"
+                    "Separate batteries immediately—tape terminals to prevent fire risk",
+                    "Wipe personal data from all electronic devices before recycling",
+                    "Locate certified e-waste recycling facility in your area",
+                    "Bundle cables together for convenient collection",
+                    "Never place e-waste in regular trash or recycling bins",
+                    "Consider donating functional electronics instead of recycling",
+                    "Check manufacturer take-back programs for specific devices"
+                ]
+            },
+
+            // Scenario 3: Beverage containers
+            {
+                objects: [
+                    {
+                        name: "Glass Bottle",
+                        material: "Glass",
+                        subtype: "Clear Glass",
+                        quantity: 4,
+                        detectionConfidence: 93,
+                        weight: {
+                            estimatedGrams: 850,
+                            minGrams: 700,
+                            maxGrams: 1050,
+                            confidence: 72
+                        },
+                        biodegradable: false,
+                        recyclable: true,
+                        recyclabilityScore: 98,
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Glass is inert and persists indefinitely. However, it's 100% recyclable without quality loss and can be recycled endlessly. Recycling saves raw materials and reduces energy by 30%.",
+                        recyclingMethod: "Remove caps and lids, rinse clean, separate by color if required, place in glass recycling.",
+                        reuseIdeas: [
+                            "Reuse as water bottles or storage",
+                            "Create decorative vases or candle holders",
+                            "Use for homemade sauces or preserves"
+                        ],
+                        disposalMethod: "If recycling unavailable, dispose carefully in general waste.",
+                        recommendedAction: "Rinse and recycle—glass recycling prevents mining for raw materials."
+                    },
+                    {
+                        name: "Plastic Bottle Cap",
+                        material: "Plastic",
+                        subtype: "HDPE/PP",
+                        quantity: 6,
+                        detectionConfidence: 82,
+                        weight: {
+                            estimatedGrams: 45,
+                            minGrams: 30,
+                            maxGrams: 65,
+                            confidence: 56
+                        },
+                        biodegradable: false,
+                        recyclable: true,
+                        recyclabilityScore: 75,
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "Bottle caps are often different plastic than bottles. Many facilities now accept caps left on bottles for easier processing.",
+                        recyclingMethod: "Modern guidance: leave caps ON bottles when recycling. If removing, collect in larger container.",
+                        reuseIdeas: [
+                            "Collect for craft projects",
+                            "Use as game pieces",
+                            "Create mosaic art"
+                        ],
+                        disposalMethod: "Recycle with bottles or dispose in general waste.",
+                        recommendedAction: "Leave caps on bottles for recycling—easier to capture and process."
+                    },
+                    {
+                        name: "Steel Can",
+                        material: "Metal",
+                        subtype: "Steel",
+                        quantity: 3,
+                        detectionConfidence: 87,
+                        weight: {
+                            estimatedGrams: 185,
+                            minGrams: 150,
+                            maxGrams: 230,
+                            confidence: 68
+                        },
+                        biodegradable: false,
+                        recyclable: true,
+                        recyclabilityScore: 96,
+                        environmentalRisk: "Low",
+                        environmentalImpact: "Steel cans are highly recyclable. Recycling prevents mining, saves energy, reduces CO2 emissions. Magnetic separation makes sorting easy.",
+                        recyclingMethod: "Remove labels (optional), rinse to remove food residue, place in metal recycling.",
+                        reuseIdeas: [
+                            "Storage containers",
+                            "Pencil holders or organizers",
+                            "DIY planters with drainage"
+                        ],
+                        disposalMethod: "If recycling unavailable, dispose in general waste.",
+                        recommendedAction: "Rinse and recycle—steel is magnetically separated and easily processed."
+                    },
+                    {
+                        name: "Plastic Bottle",
+                        material: "Plastic",
+                        subtype: "PET",
+                        quantity: 6,
+                        detectionConfidence: 90,
+                        weight: {
+                            estimatedGrams: 180,
+                            minGrams: 140,
+                            maxGrams: 230,
+                            confidence: 73
+                        },
+                        biodegradable: false,
+                        recyclable: true,
+                        recyclabilityScore: 93,
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "PET plastic persists for centuries. Breaks down into microplastics. However, PET has high recycling value and can be reprocessed.",
+                        recyclingMethod: "Empty, rinse, remove caps, flatten, place in PET recycling (look for #1 symbol).",
+                        reuseIdeas: [
+                            "Refill for water storage",
+                            "DIY planters",
+                            "Craft projects"
+                        ],
+                        disposalMethod: "If recycling unavailable, dispose in general waste. Never burn.",
+                        recommendedAction: "Rinse, flatten, and recycle through PET collection program."
+                    },
+                    {
+                        name: "Carton Container",
+                        material: "Mixed Material",
+                        subtype: "Tetra Pak",
+                        quantity: 2,
+                        detectionConfidence: 78,
+                        weight: {
+                            estimatedGrams: 120,
+                            minGrams: 90,
+                            maxGrams: 160,
+                            confidence: 61
+                        },
+                        biodegradable: false,
+                        recyclable: true,
+                        recyclabilityScore: 52,
+                        environmentalRisk: "Medium",
+                        environmentalImpact: "Multi-layer packaging (paper + plastic + foil). Requires specialized facilities to separate layers. Not universally accepted.",
+                        recyclingMethod: "Check if local program accepts cartons. Rinse, flatten, remove straws/caps.",
+                        reuseIdeas: [
+                            "Use for organizing small items",
+                            "Plant seed starters",
+                            "DIY wallet or small containers"
+                        ],
+                        disposalMethod: "If not accepted locally, dispose in general waste—don't contaminate paper recycling.",
+                        recommendedAction: "Verify local acceptance, rinse and flatten if recyclable, otherwise general waste."
+                    }
+                ],
+                greenImpactScore: 89,
+                impactExplanation: "Beverage container mix with excellent recyclability. Glass and metal are top-tier recyclables with high recovery value. Proper sorting maximizes environmental benefits.",
+                actionPlan: [
+                    "Rinse all beverage containers thoroughly before recycling",
+                    "Leave caps on bottles for modern recycling facilities",
+                    "Separate glass by color if required by local facility",
+                    "Group metal cans together—will be sorted automatically",
+                    "Flatten Tetra Pak cartons after rinsing",
+                    "Verify local program accepts cartons before placing in recycling",
+                    "Consider switching to reusable bottles to reduce waste"
                 ]
             }
         ];
@@ -619,17 +646,17 @@ export class MockAIProvider {
                 ],
                 environmentalImpact: "Illegal dumping contaminates soil with chemicals and heavy metals, attracts disease-carrying pests, produces harmful leachate that pollutes groundwater, creates fire hazards, and degrades local environment quality.",
                 urgency: "High",
-                recommendedAction: "Report immediately to local authorities. Do not attempt cleanup without professional assessment due to potential hazardous material presence. Area requires official environmental impact assessment.",
+                recommendedAction: "Report immediately to local authorities. Do not attempt cleanup without professional assessment due to potential hazardous material presence.",
                 recommendedActions: [
                     "Document pollution with photos and location data",
                     "Report to municipal authorities and environmental protection agency",
                     "Do NOT attempt cleanup without professional hazard assessment",
                     "Request official environmental impact assessment",
                     "Install physical barriers or surveillance to prevent further dumping",
-                    "Advocate for increased enforcement and penalties for illegal dumping"
+                    "Advocate for increased enforcement and penalties"
                 ],
                 greenImpactScore: 42,
-                impactExplanation: "Illegal dumping creates severe environmental and health risks. Professional cleanup and enforcement are essential to restore environmental quality and prevent recurrence."
+                impactExplanation: "Illegal dumping creates severe environmental and health risks. Professional cleanup and enforcement are essential to restore environmental quality."
             },
             {
                 pollutionType: "Water Pollution",
@@ -644,20 +671,20 @@ export class MockAIProvider {
                     "Potential chemical or sewage contamination",
                     "Aquatic ecosystem stress indicators"
                 ],
-                environmentalImpact: "Water pollution kills aquatic life, makes water unsafe for human use, disrupts entire aquatic ecosystems, contaminates drinking water sources, and affects communities dependent on water body for livelihood.",
+                environmentalImpact: "Water pollution kills aquatic life, makes water unsafe for human use, disrupts entire aquatic ecosystems, contaminates drinking water sources, and affects communities dependent on water body.",
                 urgency: "Critical",
-                recommendedAction: "Report immediately to water quality authorities and environmental protection agency. Avoid direct contact with water. Do not consume or use water until officially tested and declared safe.",
+                recommendedAction: "Report immediately to water quality authorities. Avoid direct contact with water. Do not consume or use water until officially tested.",
                 recommendedActions: [
                     "Report immediately to water quality management authority",
                     "Document pollution source if identifiable",
                     "Avoid all contact with contaminated water",
                     "Alert downstream communities of potential contamination",
                     "Request emergency water quality testing",
-                    "Identify and stop pollution source (industrial discharge, sewage leak, etc.)",
-                    "Initiate investigation of responsible parties for legal action"
+                    "Identify and stop pollution source",
+                    "Initiate investigation for legal action"
                 ],
                 greenImpactScore: 35,
-                impactExplanation: "Water pollution has severe and immediate impacts on ecosystems and human health. Urgent action is required to identify source, stop contamination, and initiate remediation."
+                impactExplanation: "Water pollution has severe and immediate impacts on ecosystems and human health. Urgent action required to stop contamination and initiate remediation."
             }
         ];
     }
