@@ -1,0 +1,29 @@
+{
+  "name": "econex-nova-image-server",
+  "version": "1.0.0",
+  "description": "ECONEX NOVA Environmental Image Intelligence API",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "echo \"Tests not configured yet\" && exit 0"
+  },
+  "keywords": [
+    "environmental",
+    "image-analysis",
+    "waste-detection",
+    "pollution-detection",
+    "ai",
+    "sustainability"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {}
+}

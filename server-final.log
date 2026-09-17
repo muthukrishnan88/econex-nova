@@ -1,0 +1,56 @@
+
+> econex-nova-image-server@1.0.0 dev
+> node --watch src/server.js
+
+[INFO] 
+[INFO] ==============================================
+[INFO]      ECONEX NOVA IMAGE SERVER
+[INFO] ==============================================
+[INFO] Server  : http://localhost:3000
+[INFO] Health  : http://localhost:3000/api/health
+[INFO] 
+[INFO] API Endpoints:
+[INFO]   POST http://localhost:3000/api/image/verify
+[INFO]   POST http://localhost:3000/api/waste/analyze
+[INFO]   POST http://localhost:3000/api/pollution/analyze
+[INFO] 
+[INFO] Mode    : DEVELOPMENT
+[INFO] AI      : mock
+[INFO] ==============================================
+[INFO] 
+Completed running 'src/server.js'
+Restarting 'src/server.js'
+[INFO] 
+[INFO] ==============================================
+[INFO]      ECONEX NOVA IMAGE SERVER
+[INFO] ==============================================
+[INFO] Server  : http://localhost:3000
+[INFO] Health  : http://localhost:3000/api/health
+[INFO] 
+[INFO] API Endpoints:
+[INFO]   POST http://localhost:3000/api/image/verify
+[INFO]   POST http://localhost:3000/api/waste/analyze
+[INFO]   POST http://localhost:3000/api/pollution/analyze
+[INFO] 
+[INFO] Mode    : DEVELOPMENT
+[INFO] AI      : mock
+[INFO] ==============================================
+[INFO] 
+Restarting 'src/server.js'
+[INFO] 
+[INFO] ==============================================
+[INFO]      ECONEX NOVA IMAGE SERVER
+[INFO] ==============================================
+[INFO] Server  : http://localhost:3000
+[INFO] Health  : http://localhost:3000/api/health
+[INFO] 
+[INFO] API Endpoints:
+[INFO]   POST http://localhost:3000/api/image/verify
+[INFO]   POST http://localhost:3000/api/waste/analyze
+[INFO]   POST http://localhost:3000/api/pollution/analyze
+[INFO] 
+[INFO] Mode    : DEVELOPMENT
+[INFO] AI      : mock
+[INFO] ==============================================
+[INFO] 
+Completed running 'src/server.js'
