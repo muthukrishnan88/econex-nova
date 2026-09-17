@@ -1936,7 +1936,12 @@ async function analyzeImage() {
 
     } catch (error) {
         console.error('Analysis error:', error);
-        alert('Analysis failed. Please check server connection.');
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            apiUrl: API_BASE_URL
+        });
+        alert(`Analysis failed: ${error.message}\n\nAPI URL: ${API_BASE_URL}\n\nCheck console (F12) for details.`);
     } finally {
         analyzeBtn.disabled = false;
         analyzeBtn.textContent = 'ANALYZE IMAGE';
