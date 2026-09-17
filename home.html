@@ -1,0 +1,1412 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ECONEX NOVA — Environmental AI Extension</title>
+
+<meta name="description"
+content="ECONEX NOVA is an AI-powered environmental intelligence platform for detecting waste, analyzing environmental problems and creating sustainable actions.">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --green-1: #22c55e;
+    --green-2: #16a34a;
+    --green-3: #15803d;
+    --green-dark: #052e16;
+    --green-bg: #061a12;
+    --text: #f0fdf4;
+    --muted: #a7f3d0;
+    --border: rgba(74, 222, 128, 0.18);
+    --glass: rgba(255,255,255,0.055);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        radial-gradient(circle at 15% 10%, rgba(34,197,94,.16), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(16,185,129,.13), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(22,163,74,.12), transparent 30%),
+        linear-gradient(135deg, #03140c 0%, #061a12 45%, #03140c 100%);
+
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Ambient background */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+    opacity: .25;
+}
+
+/* HEADER */
+
+.header {
+    position: relative;
+    z-index: 10;
+
+    width: 100%;
+    padding: 20px 6%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid rgba(74,222,128,.12);
+
+    background: rgba(3,20,12,.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    color: white;
+    text-decoration: none;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(135deg, #22c55e, #15803d);
+
+    box-shadow:
+        0 8px 30px rgba(34,197,94,.25),
+        inset 0 1px 1px rgba(255,255,255,.25);
+}
+
+.logo svg {
+    width: 31px;
+    height: 31px;
+}
+
+.brand-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -.4px;
+}
+
+.brand-name span {
+    color: #4ade80;
+}
+
+.back {
+    color: #a7f3d0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    transition: .25s;
+}
+
+.back:hover {
+    color: white;
+    background: rgba(34,197,94,.1);
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    z-index: 1;
+
+    max-width: 1100px;
+    margin: auto;
+
+    padding: 75px 25px 45px;
+
+    text-align: center;
+}
+
+.eco-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 9px 17px;
+
+    border: 1px solid rgba(74,222,128,.22);
+    border-radius: 999px;
+
+    background: rgba(34,197,94,.08);
+
+    color: #86efac;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    margin-bottom: 24px;
+
+    box-shadow: 0 10px 35px rgba(34,197,94,.08);
+}
+
+.eco-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+
+    box-shadow: 0 0 15px #4ade80;
+
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%,100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .5;
+        transform: scale(.75);
+    }
+}
+
+.hero h1 {
+    font-size: clamp(42px, 7vw, 76px);
+    line-height: 1.05;
+
+    font-weight: 900;
+    letter-spacing: -3px;
+
+    margin-bottom: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ecfdf5 5%,
+            #86efac 45%,
+            #22c55e 90%
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero h1 em {
+    font-style: normal;
+    display: block;
+
+    background:
+        linear-gradient(
+            135deg,
+            #22c55e,
+            #34d399,
+            #86efac
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    max-width: 760px;
+    margin: 0 auto 38px;
+
+    color: #a7f3d0;
+
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+/* MAIN DOWNLOAD CARD */
+
+.download-card {
+    position: relative;
+
+    max-width: 620px;
+    margin: 0 auto 55px;
+
+    padding: 34px;
+
+    border-radius: 24px;
+
+    border: 1px solid rgba(74,222,128,.22);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(34,197,94,.10),
+            rgba(255,255,255,.035)
+        );
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.35),
+        0 0 60px rgba(34,197,94,.06);
+
+    overflow: hidden;
+}
+
+.download-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    top: -130px;
+    right: -90px;
+
+    background: #22c55e;
+
+    filter: blur(100px);
+
+    opacity: .12;
+}
+
+.card-top {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+
+    color: #bbf7d0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.card-icon {
+    font-size: 22px;
+}
+
+.download-btn {
+    position: relative;
+
+    width: 100%;
+
+    padding: 19px 24px;
+
+    border: none;
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #22c55e,
+            #16a34a
+        );
+
+    color: white;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+
+    box-shadow:
+        0 12px 35px rgba(34,197,94,.24);
+
+    transition:
+        transform .25s,
+        box-shadow .25s,
+        filter .25s;
+}
+
+.download-btn:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 18px 45px rgba(34,197,94,.35);
+
+    filter: brightness(1.08);
+}
+
+.download-btn:active {
+    transform: translateY(-1px);
+}
+
+.download-btn:disabled {
+    cursor: not-allowed;
+    opacity: .7;
+}
+
+.alt-download {
+    position: relative;
+
+    margin-top: 15px;
+
+    padding: 14px;
+
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.035);
+
+    color: #86a895;
+
+    font-size: 13px;
+}
+
+.alt-download a {
+    color: #4ade80;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.alt-download a:hover {
+    text-decoration: underline;
+}
+
+/* STATUS */
+
+.status-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 9px 15px;
+
+    border-radius: 999px;
+
+    background: rgba(245,158,11,.08);
+
+    border: 1px solid rgba(245,158,11,.2);
+
+    color: #fde68a;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    margin-bottom: 22px;
+}
+
+.status-banner.installed {
+    background: rgba(34,197,94,.09);
+    border-color: rgba(34,197,94,.25);
+    color: #86efac;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #f59e0b;
+}
+
+.status-banner.installed .status-dot {
+    background: #22c55e;
+
+    box-shadow: 0 0 12px #22c55e;
+}
+
+/* FEATURES */
+
+.features {
+    max-width: 1050px;
+
+    margin: 0 auto 85px;
+
+    padding: 0 25px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.feature {
+    position: relative;
+
+    padding: 28px 24px;
+
+    border-radius: 19px;
+
+    background: rgba(255,255,255,.035);
+
+    border: 1px solid rgba(74,222,128,.12);
+
+    text-align: left;
+
+    transition:
+        transform .25s,
+        border-color .25s,
+        background .25s;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(74,222,128,.3);
+
+    background: rgba(34,197,94,.055);
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(34,197,94,.1);
+
+    font-size: 23px;
+
+    margin-bottom: 18px;
+}
+
+.feature h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.feature p {
+    color: #86a895;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ENVIRONMENT SECTION */
+
+.environment {
+    position: relative;
+
+    max-width: 1050px;
+
+    margin: 0 auto 80px;
+
+    padding: 0 25px;
+}
+
+.environment-box {
+    padding: 48px 40px;
+
+    border-radius: 28px;
+
+    border: 1px solid rgba(74,222,128,.15);
+
+    background:
+        radial-gradient(
+            circle at 80% 30%,
+            rgba(34,197,94,.12),
+            transparent 35%
+        ),
+        rgba(255,255,255,.025);
+
+    display: grid;
+
+    grid-template-columns: 1.1fr .9fr;
+
+    gap: 45px;
+
+    align-items: center;
+}
+
+.environment h2 {
+    font-size: 34px;
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 15px;
+}
+
+.environment h2 span {
+    color: #4ade80;
+}
+
+.environment-text {
+    color: #8fb9a0;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+}
+
+.eco-points {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+.eco-point {
+    padding: 17px;
+
+    border-radius: 15px;
+
+    background: rgba(34,197,94,.055);
+
+    border: 1px solid rgba(74,222,128,.1);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #bbf7d0;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* INSTALLATION */
+
+.steps {
+    max-width: 850px;
+
+    margin: 0 auto 90px;
+
+    padding: 0 25px;
+}
+
+.section-heading {
+    text-align: center;
+
+    margin-bottom: 38px;
+}
+
+.section-heading .small {
+    color: #4ade80;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 9px;
+}
+
+.section-heading h2 {
+    font-size: 34px;
+
+    letter-spacing: -1px;
+}
+
+.step {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    padding: 20px;
+
+    margin-bottom: 12px;
+
+    border-radius: 17px;
+
+    background: rgba(255,255,255,.03);
+
+    border: 1px solid rgba(74,222,128,.09);
+
+    transition: .25s;
+}
+
+.step:hover {
+    background: rgba(34,197,94,.045);
+
+    border-color: rgba(74,222,128,.18);
+}
+
+.step-num {
+    min-width: 42px;
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #22c55e,
+            #15803d
+        );
+
+    color: white;
+
+    font-weight: 900;
+}
+
+.step-content h3 {
+    font-size: 16px;
+
+    margin-bottom: 6px;
+}
+
+.step-content p {
+    color: #7fa48f;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+code {
+    color: #86efac;
+
+    background: rgba(34,197,94,.08);
+
+    padding: 3px 7px;
+
+    border-radius: 6px;
+}
+
+/* FOOTER */
+
+.footer {
+    position: relative;
+
+    padding: 35px 20px;
+
+    border-top: 1px solid rgba(74,222,128,.1);
+
+    text-align: center;
+
+    color: #527361;
+
+    font-size: 12px;
+}
+
+.footer strong {
+    color: #4ade80;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .header {
+        padding: 15px 18px;
+    }
+
+    .brand-name {
+        font-size: 18px;
+    }
+
+    .logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .back {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    .hero {
+        padding-top: 55px;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+    }
+
+    .download-card {
+        padding: 25px 20px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .environment-box {
+        grid-template-columns: 1fr;
+
+        padding: 32px 24px;
+
+        gap: 28px;
+    }
+
+    .environment h2 {
+        font-size: 29px;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .header {
+        padding: 13px 15px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .brand {
+        gap: 9px;
+    }
+
+    .logo {
+        width: 39px;
+        height: 39px;
+        border-radius: 12px;
+    }
+
+    .back {
+        display: none;
+    }
+
+    .hero {
+        padding: 45px 16px 35px;
+    }
+
+    .hero h1 {
+        font-size: 43px;
+    }
+
+    .eco-badge {
+        font-size: 11px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+    }
+
+    .download-card {
+        border-radius: 19px;
+        padding: 22px 16px;
+    }
+
+    .features,
+    .environment,
+    .steps {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .eco-points {
+        grid-template-columns: 1fr;
+    }
+
+    .environment-box {
+        border-radius: 22px;
+    }
+
+    .section-heading h2 {
+        font-size: 28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <a href="home.html" class="brand">
+
+        <div class="logo">
+
+            <!-- Eco leaf logo -->
+            <svg viewBox="0 0 64 64"
+                 fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+
+                <path
+                    d="M53 8C35 9 19 14 13 27C7 40 15 53 28 53C43 53 54 39 53 8Z"
+                    fill="white"
+                    opacity=".95"/>
+
+                <path
+                    d="M14 49C23 39 31 29 45 19"
+                    stroke="#15803D"
+                    stroke-width="4"
+                    stroke-linecap="round"/>
+
+                <path
+                    d="M28 35C25 30 25 25 27 21"
+                    stroke="#15803D"
+                    stroke-width="3"
+                    stroke-linecap="round"/>
+
+            </svg>
+
+        </div>
+
+        <div class="brand-name">
+            ECONEX <span>NOVA</span>
+        </div>
+
+    </a>
+
+    <a href="home.html" class="back">
+        ← Back to Home
+    </a>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="eco-badge">
+        <span class="eco-dot"></span>
+        ENVIRONMENTAL AI • NEXT GENERATION
+    </div>
+
+    <div id="statusBanner" class="status-banner">
+
+        <div class="status-dot"></div>
+
+        <span id="statusText">
+            Extension Not Installed
+        </span>
+
+    </div>
+
+    <h1>
+        Protect the Web.
+        <em>Protect the Planet.</em>
+    </h1>
+
+    <p class="hero-subtitle">
+
+        Meet <strong>ECONEX NOVA</strong> —
+        an intelligent environmental technology platform
+        designed to help people understand digital risks,
+        environmental problems and take smarter sustainable action.
+
+    </p>
+
+
+    <!-- DOWNLOAD -->
+
+    <div class="download-card">
+
+        <div class="card-top">
+
+            <span class="card-icon">🌱</span>
+
+            <span>
+                ECONEX NOVA Desktop Extension
+            </span>
+
+        </div>
+
+        <button
+            id="downloadBtn"
+            class="download-btn"
+            onclick="downloadExtension()">
+
+            <span>⬇️</span>
+
+            <span>
+                Download ECONEX NOVA
+            </span>
+
+        </button>
+
+        <div class="alt-download">
+
+            Or get the extension directly from
+
+            <a
+                href="https://github.com/muthukrishnan88/nova/raw/main/safnex-extension.zip"
+                target="_blank"
+                rel="noopener">
+
+                GitHub
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features">
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🛡️
+        </div>
+
+        <h3>
+            Intelligent Protection
+        </h3>
+
+        <p>
+            Analyze suspicious websites and identify
+            potentially dangerous digital destinations
+            before interacting with them.
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🤖
+        </div>
+
+        <h3>
+            AI Intelligence
+        </h3>
+
+        <p>
+            Combine intelligent analysis with clear
+            explanations so users can understand
+            what they are seeing.
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🌍
+        </div>
+
+        <h3>
+            Green Technology
+        </h3>
+
+        <p>
+            Built around a bigger vision:
+            using AI and technology to support
+            environmental awareness and sustainability.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ENVIRONMENT VISION -->
+
+<section class="environment">
+
+    <div class="environment-box">
+
+        <div>
+
+            <h2>
+                AI for a
+                <span>Greener Future</span>
+            </h2>
+
+            <p class="environment-text">
+
+                ECONEX NOVA brings artificial intelligence,
+                environmental awareness and digital
+                technology together in one ecosystem.
+
+                The platform can evolve from detecting
+                environmental problems to identifying waste,
+                analyzing materials, measuring impact and
+                recommending sustainable actions.
+
+            </p>
+
+        </div>
+
+
+        <div class="eco-points">
+
+            <div class="eco-point">
+                ♻️
+                Waste Detection
+            </div>
+
+            <div class="eco-point">
+                🌱
+                Green Impact
+            </div>
+
+            <div class="eco-point">
+                📷
+                AI Vision
+            </div>
+
+            <div class="eco-point">
+                🧠
+                Smart Analysis
+            </div>
+
+            <div class="eco-point">
+                🌍
+                Sustainability
+            </div>
+
+            <div class="eco-point">
+                ⚡
+                Smart Actions
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- INSTALLATION -->
+
+<section class="steps">
+
+    <div class="section-heading">
+
+        <div class="small">
+            QUICK SETUP
+        </div>
+
+        <h2>
+            Install ECONEX NOVA
+        </h2>
+
+    </div>
+
+
+    <div class="step">
+
+        <div class="step-num">
+            1
+        </div>
+
+        <div class="step-content">
+
+            <h3>
+                Download & Extract
+            </h3>
+
+            <p>
+                Download the ZIP package and extract it
+                to a permanent folder on your computer.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="step">
+
+        <div class="step-num">
+            2
+        </div>
+
+        <div class="step-content">
+
+            <h3>
+                Open Chrome Extensions
+            </h3>
+
+            <p>
+                Open
+                <code>chrome://extensions/</code>
+                in Google Chrome.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="step">
+
+        <div class="step-num">
+            3
+        </div>
+
+        <div class="step-content">
+
+            <h3>
+                Enable Developer Mode
+            </h3>
+
+            <p>
+                Turn on the
+                <strong>Developer mode</strong>
+                switch in the top-right corner.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="step">
+
+        <div class="step-num">
+            4
+        </div>
+
+        <div class="step-content">
+
+            <h3>
+                Load ECONEX NOVA
+            </h3>
+
+            <p>
+                Select
+                <strong>Load unpacked</strong>
+                and choose the extracted extension folder.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="step">
+
+        <div class="step-num">
+            5
+        </div>
+
+        <div class="step-content">
+
+            <h3>
+                Start Exploring
+            </h3>
+
+            <p>
+                ECONEX NOVA is now available from
+                your browser toolbar.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <p>
+        © 2026
+        <strong>ECONEX NOVA</strong>
+        • Environmental Intelligence Platform
+    </p>
+
+</footer>
+
+
+<script>
+
+/* --------------------------------
+   MOBILE DETECTION
+-------------------------------- */
+
+function isMobile() {
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+        .test(navigator.userAgent);
+
+}
+
+
+/* --------------------------------
+   EXTENSION CHECK
+-------------------------------- */
+
+function checkExtension() {
+
+    const installed =
+        document.documentElement
+            .hasAttribute("data-safnex-installed");
+
+    const banner =
+        document.getElementById("statusBanner");
+
+    const text =
+        document.getElementById("statusText");
+
+    const btn =
+        document.getElementById("downloadBtn");
+
+
+    /* Mobile */
+
+    if (isMobile()) {
+
+        banner.style.background =
+            "rgba(34,197,94,.08)";
+
+        banner.style.borderColor =
+            "rgba(34,197,94,.22)";
+
+        banner.style.color =
+            "#86efac";
+
+        text.textContent =
+            "📱 Mobile Device • Use ECONEX NOVA Online";
+
+        btn.innerHTML =
+            "<span>🌱</span><span>Open ECONEX NOVA</span>";
+
+        btn.onclick = function () {
+
+            window.location.href =
+                "home.html";
+
+        };
+
+        return;
+    }
+
+
+    /* Installed */
+
+    if (installed) {
+
+        banner.classList.add("installed");
+
+        text.textContent =
+            "✓ ECONEX NOVA Extension Active";
+
+        btn.disabled = true;
+
+        btn.innerHTML =
+            "<span>✓</span><span>Extension Already Installed</span>";
+
+    }
+
+}
+
+
+/* --------------------------------
+   DOWNLOAD EXTENSION
+-------------------------------- */
+
+function downloadExtension() {
+
+    const btn =
+        document.getElementById("downloadBtn");
+
+    const original =
+        btn.innerHTML;
+
+
+    btn.innerHTML =
+        "<span>⏳</span><span>Preparing Download...</span>";
+
+    btn.disabled = true;
+
+
+    window.location.href =
+        "safnex-extension.zip";
+
+
+    setTimeout(function () {
+
+        alert(
+            "✓ ECONEX NOVA download started!\\n\\n" +
+            "Installation steps:\\n" +
+            "1. Extract the ZIP file\\n" +
+            "2. Open chrome://extensions/\\n" +
+            "3. Enable Developer mode\\n" +
+            "4. Click Load unpacked\\n" +
+            "5. Select the extracted extension folder"
+        );
+
+
+        btn.innerHTML = original;
+
+        btn.disabled = false;
+
+    }, 900);
+
+}
+
+
+/* --------------------------------
+   INITIALIZE
+-------------------------------- */
+
+checkExtension();
+
+setInterval(
+    checkExtension,
+    2000
+);
+
+</script>
+
+</body>
+</html>
+```
