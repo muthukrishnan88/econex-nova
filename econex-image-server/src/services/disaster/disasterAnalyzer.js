@@ -46,7 +46,17 @@ export class DisasterAnalyzer {
                     type: detection.disaster.type,
                     subtype: detection.disaster.subtype,
                     confidence: detection.disaster.confidence,
-                    evidence: detection.disaster.evidence
+                    evidence: detection.disaster.evidence,
+                    // Include historical disaster fields if present
+                    ...(detection.disaster.isHistorical && {
+                        isHistorical: detection.disaster.isHistorical,
+                        name: detection.disaster.name,
+                        location: detection.disaster.location,
+                        date: detection.disaster.date,
+                        casualties: detection.disaster.casualties,
+                        damage: detection.disaster.damage,
+                        impactDetails: detection.disaster.impactDetails
+                    })
                 },
 
                 // Affected area (from GDACS data)
