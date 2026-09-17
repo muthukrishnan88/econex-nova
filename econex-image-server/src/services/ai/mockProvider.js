@@ -3,6 +3,7 @@ import { logger } from "../../utils/logger.js";
 export class MockAIProvider {
     constructor() {
         this.name = "Mock AI Provider";
+        this.scenarioIndex = 0; // Track which scenario to return
         logger.info("Mock AI Provider initialized (Development Mode)");
     }
 
@@ -125,12 +126,12 @@ export class MockAIProvider {
         // In real use, this would analyze actual image content
         // For demo, we intelligently select scenarios or return "no pollution detected"
 
-        const random = Math.random();
         const authenticity = this._generateAuthenticity();
         const imageQuality = 75 + Math.floor(Math.random() * 20);
 
+        // For predictable demo: Always return pollution (no random "not detected")
         // 20% chance: No clear pollution detected (demonstrates precision)
-        if (random < 0.2) {
+        if (false && Math.random() < 0.2) {
             return {
                 success: true,
                 analysisMode: "AI",
@@ -183,9 +184,10 @@ export class MockAIProvider {
             };
         }
 
-        // 80% chance: Return scenario-based pollution detection
+        // Return scenario in predictable order (cycles through scenarios)
         const scenarios = this._getPollutionScenarios();
-        const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+        const scenario = scenarios[this.scenarioIndex % scenarios.length];
+        this.scenarioIndex++; // Next upload gets next scenario
 
         const scene = {
             description: scenario.sceneDescription || "Environmental scene with visible pollution indicators.",
