@@ -1,1051 +1,2959 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ECONEX NOVA — Environmental AI Extension</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+>
 
-<meta name="description"
-content="ECONEX NOVA is an AI-powered environmental intelligence platform for detecting waste, analyzing environmental problems and creating sustainable actions.">
+<meta
+    name="theme-color"
+    content="#08092d"
+>
+
+<title>ECONEX NOVA | Green Digital Safety</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root{
+    --navy:#08092d;
+    --navy2:#11134b;
+
+    --blue:#5367ff;
+    --blue2:#6677ff;
+
+    --cyan:#25c9ff;
+
+    --green:#17b879;
+    --green-bg:#eafbf4;
+
+    --orange:#f59a45;
+    --orange-bg:#fff3e7;
+
+    --red:#ed5964;
+    --red-bg:#fff0f1;
+
+    --text:#171927;
+    --muted:#858896;
+
+    --bg:#f4f5f9;
+    --white:#ffffff;
+
+    --border:#e6e7ed;
+
+    --shadow:
+        0 25px 70px
+        rgba(8,12,50,.15);
 }
 
-:root {
-    --green-1: #22c55e;
-    --green-2: #16a34a;
-    --green-3: #15803d;
-    --green-dark: #052e16;
-    --green-bg: #061a12;
-    --text: #f0fdf4;
-    --muted: #a7f3d0;
-    --border: rgba(74, 222, 128, 0.18);
-    --glass: rgba(255,255,255,0.055);
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+    scroll-behavior:smooth;
 }
 
-body {
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+body{
+    background:#e8eaf1;
+    color:var(--text);
+    font-family:"DM Sans",Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+button,
+input,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    width:100%;
+    max-width:1180px;
+    min-height:100vh;
+    margin:auto;
+    background:var(--bg);
+    position:relative;
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    height:68px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    color:white;
+    position:relative;
+    z-index:20;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:Manrope;
+    font-size:18px;
+    font-weight:800;
+}
+
+.logo{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     background:
-        radial-gradient(circle at 15% 10%, rgba(34,197,94,.16), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(16,185,129,.13), transparent 28%),
-        radial-gradient(circle at 50% 90%, rgba(22,163,74,.12), transparent 30%),
-        linear-gradient(135deg, #03140c 0%, #061a12 45%, #03140c 100%);
+        linear-gradient(
+            135deg,
+            #5d70ff,
+            #20cbff
+        );
 
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-/* Ambient background */
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-        radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
-    background-size: 42px 42px;
-    mask-image: linear-gradient(to bottom, black, transparent);
-    opacity: .25;
-}
-
-/* HEADER */
-
-.header {
-    position: relative;
-    z-index: 10;
-
-    width: 100%;
-    padding: 20px 6%;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border-bottom: 1px solid rgba(74,222,128,.12);
-
-    background: rgba(3,20,12,.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-
-    color: white;
-    text-decoration: none;
-}
-
-.logo {
-    width: 48px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 15px;
-
-    background:
-        linear-gradient(135deg, #22c55e, #15803d);
+    color:white;
+    font-weight:900;
 
     box-shadow:
-        0 8px 30px rgba(34,197,94,.25),
-        inset 0 1px 1px rgba(255,255,255,.25);
+        0 8px 25px
+        rgba(35,201,255,.2);
+
+    overflow:hidden;
+    flex-shrink:0;
 }
 
-.logo svg {
-    width: 31px;
-    height: 31px;
+.logo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    border-radius:50%;
 }
 
-.brand-name {
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: -.4px;
+.brand span{
+    color:#73dcff;
 }
 
-.brand-name span {
-    color: #4ade80;
+.header-actions{
+    display:flex;
+    gap:8px;
 }
 
-.back {
-    color: #a7f3d0;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
+.header-button{
+    width:39px;
+    height:39px;
 
-    padding: 10px 16px;
-    border-radius: 10px;
+    border:
+        1px solid
+        rgba(255,255,255,.13);
 
-    transition: .25s;
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.back:hover {
-    color: white;
-    background: rgba(34,197,94,.1);
+.header-button svg{
+    width:19px;
+    height:19px;
 }
 
-/* HERO */
-
-.hero {
-    position: relative;
-    z-index: 1;
-
-    max-width: 1100px;
-    margin: auto;
-
-    padding: 75px 25px 45px;
-
-    text-align: center;
+.extension-badge{
+    position:relative;
+    background:
+        linear-gradient(135deg,
+            rgba(102,126,234,.2),
+            rgba(118,75,162,.2)
+        );
+    border-color:rgba(102,126,234,.3);
 }
 
-.eco-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-
-    padding: 9px 17px;
-
-    border: 1px solid rgba(74,222,128,.22);
-    border-radius: 999px;
-
-    background: rgba(34,197,94,.08);
-
-    color: #86efac;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    margin-bottom: 24px;
-
-    box-shadow: 0 10px 35px rgba(34,197,94,.08);
+.extension-badge:hover{
+    background:
+        linear-gradient(135deg,
+            rgba(102,126,234,.3),
+            rgba(118,75,162,.3)
+        );
 }
 
-.eco-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #4ade80;
-
-    box-shadow: 0 0 15px #4ade80;
-
-    animation: pulse 2s infinite;
+.extension-pulse{
+    position:absolute;
+    top:5px;
+    right:5px;
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+    animation:extensionPulse 2s infinite;
 }
 
-@keyframes pulse {
-    0%,100% {
-        opacity: 1;
-        transform: scale(1);
+@keyframes extensionPulse{
+    0%,100%{
+        opacity:1;
+        transform:scale(1);
     }
-
-    50% {
-        opacity: .5;
-        transform: scale(.75);
+    50%{
+        opacity:.5;
+        transform:scale(1.3);
     }
 }
 
-.hero h1 {
-    font-size: clamp(42px, 7vw, 76px);
-    line-height: 1.05;
+@keyframes fadeIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+}
 
-    font-weight: 900;
-    letter-spacing: -3px;
 
-    margin-bottom: 24px;
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:430px;
+
+    padding:
+        38px
+        30px
+        150px;
+
+    position:relative;
+    color:white;
+    overflow:hidden;
 
     background:
-        linear-gradient(
-            135deg,
-            #ecfdf5 5%,
-            #86efac 45%,
-            #22c55e 90%
-        );
 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hero h1 em {
-    font-style: normal;
-    display: block;
-
-    background:
-        linear-gradient(
-            135deg,
-            #22c55e,
-            #34d399,
-            #86efac
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-    max-width: 760px;
-    margin: 0 auto 38px;
-
-    color: #a7f3d0;
-
-    font-size: 18px;
-    line-height: 1.7;
-}
-
-/* MAIN DOWNLOAD CARD */
-
-.download-card {
-    position: relative;
-
-    max-width: 620px;
-    margin: 0 auto 55px;
-
-    padding: 34px;
-
-    border-radius: 24px;
-
-    border: 1px solid rgba(74,222,128,.22);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(34,197,94,.10),
-            rgba(255,255,255,.035)
-        );
-
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    box-shadow:
-        0 30px 80px rgba(0,0,0,.35),
-        0 0 60px rgba(34,197,94,.06);
-
-    overflow: hidden;
-}
-
-.download-card::before {
-    content: "";
-
-    position: absolute;
-
-    width: 220px;
-    height: 220px;
-
-    top: -130px;
-    right: -90px;
-
-    background: #22c55e;
-
-    filter: blur(100px);
-
-    opacity: .12;
-}
-
-.card-top {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 10px;
-
-    margin-bottom: 22px;
-
-    color: #bbf7d0;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.card-icon {
-    font-size: 22px;
-}
-
-.download-btn {
-    position: relative;
-
-    width: 100%;
-
-    padding: 19px 24px;
-
-    border: none;
-    border-radius: 14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #22c55e,
-            #16a34a
-        );
-
-    color: white;
-
-    font-size: 17px;
-    font-weight: 800;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 11px;
-
-    box-shadow:
-        0 12px 35px rgba(34,197,94,.24);
-
-    transition:
-        transform .25s,
-        box-shadow .25s,
-        filter .25s;
-}
-
-.download-btn:hover {
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 18px 45px rgba(34,197,94,.35);
-
-    filter: brightness(1.08);
-}
-
-.download-btn:active {
-    transform: translateY(-1px);
-}
-
-.download-btn:disabled {
-    cursor: not-allowed;
-    opacity: .7;
-}
-
-.alt-download {
-    position: relative;
-
-    margin-top: 15px;
-
-    padding: 14px;
-
-    border-radius: 11px;
-
-    background: rgba(255,255,255,.035);
-
-    color: #86a895;
-
-    font-size: 13px;
-}
-
-.alt-download a {
-    color: #4ade80;
-
-    font-weight: 700;
-
-    text-decoration: none;
-}
-
-.alt-download a:hover {
-    text-decoration: underline;
-}
-
-/* STATUS */
-
-.status-banner {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-
-    padding: 9px 15px;
-
-    border-radius: 999px;
-
-    background: rgba(245,158,11,.08);
-
-    border: 1px solid rgba(245,158,11,.2);
-
-    color: #fde68a;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    margin-bottom: 22px;
-}
-
-.status-banner.installed {
-    background: rgba(34,197,94,.09);
-    border-color: rgba(34,197,94,.25);
-    color: #86efac;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #f59e0b;
-}
-
-.status-banner.installed .status-dot {
-    background: #22c55e;
-
-    box-shadow: 0 0 12px #22c55e;
-}
-
-/* FEATURES */
-
-.features {
-    max-width: 1050px;
-
-    margin: 0 auto 85px;
-
-    padding: 0 25px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 18px;
-}
-
-.feature {
-    position: relative;
-
-    padding: 28px 24px;
-
-    border-radius: 19px;
-
-    background: rgba(255,255,255,.035);
-
-    border: 1px solid rgba(74,222,128,.12);
-
-    text-align: left;
-
-    transition:
-        transform .25s,
-        border-color .25s,
-        background .25s;
-}
-
-.feature:hover {
-    transform: translateY(-5px);
-
-    border-color: rgba(74,222,128,.3);
-
-    background: rgba(34,197,94,.055);
-}
-
-.feature-icon {
-    width: 48px;
-    height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 14px;
-
-    background: rgba(34,197,94,.1);
-
-    font-size: 23px;
-
-    margin-bottom: 18px;
-}
-
-.feature h3 {
-    font-size: 17px;
-    margin-bottom: 8px;
-}
-
-.feature p {
-    color: #86a895;
-
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-/* ENVIRONMENT SECTION */
-
-.environment {
-    position: relative;
-
-    max-width: 1050px;
-
-    margin: 0 auto 80px;
-
-    padding: 0 25px;
-}
-
-.environment-box {
-    padding: 48px 40px;
-
-    border-radius: 28px;
-
-    border: 1px solid rgba(74,222,128,.15);
-
-    background:
         radial-gradient(
-            circle at 80% 30%,
-            rgba(34,197,94,.12),
+            circle at 85% 10%,
+            rgba(37,201,255,.24),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 5% 90%,
+            rgba(83,103,255,.26),
             transparent 35%
         ),
-        rgba(255,255,255,.025);
 
-    display: grid;
-
-    grid-template-columns: 1.1fr .9fr;
-
-    gap: 45px;
-
-    align-items: center;
+        linear-gradient(
+            135deg,
+            #050626,
+            #10134a 58%,
+            #172b72
+        );
 }
 
-.environment h2 {
-    font-size: 34px;
+.hero::before{
+    content:"";
 
-    line-height: 1.15;
+    position:absolute;
 
-    letter-spacing: -1px;
+    width:480px;
+    height:480px;
 
-    margin-bottom: 15px;
+    right:-250px;
+    top:-290px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+    box-shadow:
+
+        0 0 0 60px
+        rgba(255,255,255,.025),
+
+        0 0 0 120px
+        rgba(255,255,255,.018);
 }
 
-.environment h2 span {
-    color: #4ade80;
+.hero-content{
+    max-width:1050px;
+    margin:auto;
+    position:relative;
+    z-index:2;
 }
 
-.environment-text {
-    color: #8fb9a0;
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
 
-    line-height: 1.7;
+    padding:
+        7px
+        12px;
 
-    font-size: 15px;
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    border-radius:100px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    color:#c2c8e9;
+
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.5px;
 }
 
-.eco-points {
-    display: grid;
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+
+    background:#41dfaa;
+
+    box-shadow:
+        0 0 0 5px
+        rgba(65,223,170,.1);
+}
+
+.hero h1{
+    max-width:750px;
+    margin-top:18px;
+
+    font-family:Manrope;
+
+    font-size:
+        clamp(
+            34px,
+            5vw,
+            60px
+        );
+
+    line-height:1.04;
+    letter-spacing:-2.3px;
+    font-weight:800;
+}
+
+.hero h1 span{
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #6bdcff
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    max-width:610px;
+    margin-top:15px;
+
+    color:#b9bdd7;
+
+    font-size:13px;
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 56px);
+    max-width:1050px;
+
+    margin:
+        -108px
+        auto
+        90px;
+
+    position:relative;
+    z-index:5;
+}
+
+
+/* =========================================================
+   SCANNER CARD
+========================================================= */
+
+.scanner-card{
+    background:white;
+    border-radius:29px;
+    padding:24px;
+
+    border:
+        1px solid
+        rgba(0,0,0,.04);
+
+    box-shadow:
+        0 30px 75px
+        rgba(7,10,48,.18);
+
+    transition:.25s ease;
+}
+
+.scanner-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.scanner-title{
+    font-family:Manrope;
+    font-size:20px;
+    font-weight:800;
+}
+
+.scanner-subtitle{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.ready{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    padding:
+        8px
+        10px;
+
+    border-radius:10px;
+
+    background:var(--green-bg);
+    color:#079764;
+
+    font-size:8px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+.ready i{
+    width:7px;
+    height:7px;
+
+    background:#17b879;
+    border-radius:50%;
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs{
+    display:grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(7,1fr);
 
-    gap: 12px;
+    gap:8px;
+
+    padding:5px;
+
+    border-radius:17px;
+
+    background:#f1f2f7;
+
+    margin-bottom:20px;
 }
 
-.eco-point {
-    padding: 17px;
+.tab{
+    min-height:68px;
 
-    border-radius: 15px;
+    border:0;
+    border-radius:13px;
 
-    background: rgba(34,197,94,.055);
+    background:transparent;
+    color:#858896;
 
-    border: 1px solid rgba(74,222,128,.1);
+    display:flex;
+    flex-direction:column;
 
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items:center;
+    justify-content:center;
 
-    color: #bbf7d0;
+    gap:5px;
 
-    font-size: 13px;
-    font-weight: 700;
+    transition:.2s ease;
 }
 
-/* INSTALLATION */
-
-.steps {
-    max-width: 850px;
-
-    margin: 0 auto 90px;
-
-    padding: 0 25px;
+.tab svg{
+    width:20px;
+    height:20px;
 }
 
-.section-heading {
-    text-align: center;
-
-    margin-bottom: 38px;
+.tab span{
+    font-size:9px;
+    font-weight:800;
 }
 
-.section-heading .small {
-    color: #4ade80;
+.tab.active{
+    background:white;
+    color:var(--blue);
 
-    font-size: 12px;
-
-    font-weight: 800;
-
-    letter-spacing: 1.5px;
-
-    text-transform: uppercase;
-
-    margin-bottom: 9px;
+    box-shadow:
+        0 5px 18px
+        rgba(20,25,70,.08);
 }
 
-.section-heading h2 {
-    font-size: 34px;
 
-    letter-spacing: -1px;
-}
+/* =========================================================
+   LIVE PANEL
+========================================================= */
 
-.step {
-    display: flex;
+.live-panel{
+    min-height:310px;
 
-    align-items: flex-start;
+    border:
+        1px solid
+        var(--border);
 
-    gap: 20px;
+    border-radius:21px;
 
-    padding: 20px;
-
-    margin-bottom: 12px;
-
-    border-radius: 17px;
-
-    background: rgba(255,255,255,.03);
-
-    border: 1px solid rgba(74,222,128,.09);
-
-    transition: .25s;
-}
-
-.step:hover {
-    background: rgba(34,197,94,.045);
-
-    border-color: rgba(74,222,128,.18);
-}
-
-.step-num {
-    min-width: 42px;
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 13px;
+    padding:20px;
 
     background:
         linear-gradient(
             135deg,
-            #22c55e,
-            #15803d
+            #ffffff,
+            #f8f9ff
         );
 
-    color: white;
-
-    font-weight: 900;
+    position:relative;
 }
 
-.step-content h3 {
-    font-size: 16px;
-
-    margin-bottom: 6px;
+.scanner-view{
+    width:100%;
 }
 
-.step-content p {
-    color: #7fa48f;
+.panel-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 
-    font-size: 13px;
-
-    line-height: 1.6;
+    gap:10px;
+    margin-bottom:16px;
 }
 
-code {
-    color: #86efac;
-
-    background: rgba(34,197,94,.08);
-
-    padding: 3px 7px;
-
-    border-radius: 6px;
+.panel-heading{
+    font-family:Manrope;
+    font-size:17px;
+    font-weight:800;
 }
 
-/* FOOTER */
+.panel-description{
+    margin-top:4px;
+    color:var(--muted);
 
-.footer {
-    position: relative;
-
-    padding: 35px 20px;
-
-    border-top: 1px solid rgba(74,222,128,.1);
-
-    text-align: center;
-
-    color: #527361;
-
-    font-size: 12px;
+    font-size:10px;
+    line-height:1.5;
 }
 
-.footer strong {
-    color: #4ade80;
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-label{
+    display:block;
+    margin-bottom:7px;
+
+    font-size:9px;
+    font-weight:800;
+    color:#535665;
 }
 
-/* MOBILE */
+.input{
+    width:100%;
+    height:48px;
 
-@media (max-width: 800px) {
+    border:
+        1px solid
+        #dfe1e8;
 
-    .header {
-        padding: 15px 18px;
+    border-radius:13px;
+
+    padding:
+        0
+        13px;
+
+    background:white;
+    color:#171927;
+
+    outline:none;
+
+    font-size:12px;
+
+    transition:.2s ease;
+}
+
+.input:focus{
+    border-color:var(--blue);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(83,103,255,.08);
+}
+
+textarea.input{
+    height:135px;
+    padding:13px;
+    resize:none;
+    line-height:1.55;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.check-button{
+    width:100%;
+    height:48px;
+
+    margin-top:11px;
+
+    border:0;
+    border-radius:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5367ff,
+            #6476ff
+        );
+
+    color:white;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.3px;
+
+    box-shadow:
+        0 10px 25px
+        rgba(83,103,255,.22);
+
+    transition:.2s ease;
+}
+
+.check-button:hover{
+    transform:translateY(-1px);
+}
+
+.check-button:active{
+    transform:scale(.98);
+}
+
+
+
+/* =========================================================
+   PROFESSIONAL LINK ANALYSIS LOADING
+========================================================= */
+
+.link-loading{
+    position:relative;
+    overflow:hidden;
+    padding:6px 4px 2px;
+    text-align:left;
+    animation:loadingIn .35s ease both;
+}
+
+@keyframes loadingIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.link-loading::before{
+    content:"";
+    position:absolute;
+    inset:-80px -120px;
+    background:
+        radial-gradient(circle at 20% 40%,rgba(83,103,255,.12),transparent 32%),
+        radial-gradient(circle at 80% 60%,rgba(37,201,255,.10),transparent 30%);
+    pointer-events:none;
+}
+
+.loading-main{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.loading-orbit{
+    width:76px;
+    height:76px;
+    min-width:76px;
+    border-radius:50%;
+    position:relative;
+    display:grid;
+    place-items:center;
+    background:conic-gradient(from 0deg,#5367ff,#25c9ff,#5367ff);
+    animation:orbitSpin 1.5s linear infinite;
+    box-shadow:0 12px 30px rgba(83,103,255,.20);
+}
+
+.loading-orbit::before{
+    content:"";
+    position:absolute;
+    inset:5px;
+    border-radius:50%;
+    background:#fff;
+}
+
+.loading-orbit::after{
+    content:"";
+    position:absolute;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#25c9ff;
+    box-shadow:0 0 0 7px rgba(37,201,255,.10),0 0 20px rgba(37,201,255,.55);
+}
+
+@keyframes orbitSpin{
+    to{transform:rotate(360deg)}
+}
+
+.loading-copy{
+    min-width:0;
+    flex:1;
+}
+
+.loading-kicker{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#5367ff;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1.3px;
+    text-transform:uppercase;
+}
+
+.loading-kicker i{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#25c9ff;
+    box-shadow:0 0 0 5px rgba(37,201,255,.10);
+    animation:livePulse 1s ease-in-out infinite;
+}
+
+@keyframes livePulse{
+    50%{opacity:.35;transform:scale(.7)}
+}
+
+.loading-title{
+    margin-top:5px;
+    font-family:Manrope;
+    font-size:18px;
+    font-weight:800;
+    color:#171927;
+}
+
+.loading-url{
+    margin-top:5px;
+    color:#858896;
+    font-size:8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+}
+
+.loading-progress{
+    position:relative;
+    height:5px;
+    margin-top:18px;
+    border-radius:99px;
+    background:#e9ebf3;
+    overflow:hidden;
+}
+
+.loading-progress span{
+    display:block;
+    width:28%;
+    height:100%;
+    border-radius:inherit;
+    background:linear-gradient(90deg,#5367ff,#25c9ff);
+    animation:loadingProgress 2.8s cubic-bezier(.25,.8,.25,1) infinite;
+}
+
+@keyframes loadingProgress{
+    0%{width:8%;transform:translateX(-10%)}
+    45%{width:58%}
+    80%{width:82%}
+    100%{width:92%;transform:translateX(110%)}
+}
+
+.loading-steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-top:15px;
+}
+
+.loading-step{
+    min-width:0;
+    padding:9px 7px;
+    border:1px solid #e7e9f0;
+    border-radius:11px;
+    background:rgba(255,255,255,.78);
+    transition:.3s ease;
+}
+
+.loading-step.active{
+    border-color:rgba(83,103,255,.25);
+    background:#f5f7ff;
+    box-shadow:0 6px 18px rgba(83,103,255,.07);
+}
+
+.loading-step.done{
+    border-color:rgba(23,184,121,.20);
+    background:#f4fcf8;
+}
+
+.loading-step-top{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.loading-step-dot{
+    width:7px;
+    height:7px;
+    min-width:7px;
+    border-radius:50%;
+    background:#c7cbd6;
+}
+
+.loading-step.active .loading-step-dot{
+    background:#5367ff;
+    box-shadow:0 0 0 5px rgba(83,103,255,.10);
+    animation:livePulse 1s ease-in-out infinite;
+}
+
+.loading-step.done .loading-step-dot{
+    background:#17b879;
+}
+
+.loading-step-label{
+    color:#74798a;
+    font-size:7px;
+    line-height:1.25;
+    font-weight:800;
+}
+
+.loading-note{
+    position:relative;
+    margin-top:13px;
+    color:#9a9eab;
+    font-size:8px;
+    line-height:1.5;
+}
+
+@media(max-width:600px){
+    .link-loading{
+        padding:3px 0 0;
     }
 
-    .brand-name {
-        font-size: 18px;
+    .loading-main{
+        gap:12px;
     }
 
-    .logo {
-        width: 42px;
-        height: 42px;
+    .loading-orbit{
+        width:64px;
+        height:64px;
+        min-width:64px;
     }
 
-    .back {
-        font-size: 12px;
-        padding: 8px 10px;
+    .loading-title{
+        font-size:15px;
     }
 
-    .hero {
-        padding-top: 55px;
+    .loading-kicker{
+        font-size:7px;
     }
 
-    .hero h1 {
-        letter-spacing: -2px;
+    .loading-url{
+        font-size:7.5px;
     }
 
-    .hero-subtitle {
-        font-size: 15px;
+    .loading-progress{
+        margin-top:15px;
     }
 
-    .download-card {
-        padding: 25px 20px;
+    .loading-steps{
+        gap:5px;
+        margin-top:12px;
     }
 
-    .features {
-        grid-template-columns: 1fr;
+    .loading-step{
+        padding:8px 5px;
+        border-radius:9px;
     }
 
-    .environment-box {
-        grid-template-columns: 1fr;
-
-        padding: 32px 24px;
-
-        gap: 28px;
+    .loading-step-label{
+        font-size:6px;
     }
 
-    .environment h2 {
-        font-size: 29px;
+    .loading-note{
+        font-size:7.5px;
     }
 }
 
-@media (max-width: 520px) {
-
-    .header {
-        padding: 13px 15px;
+@media(max-width:390px){
+    .loading-orbit{
+        width:58px;
+        height:58px;
+        min-width:58px;
     }
 
-    .brand-name {
-        font-size: 16px;
+    .loading-title{
+        font-size:14px;
     }
 
-    .brand {
-        gap: 9px;
+    .loading-steps{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .logo {
-        width: 39px;
-        height: 39px;
-        border-radius: 12px;
+    .loading-step-label{
+        font-size:6.5px;
+    }
+}
+
+
+/* =========================================================
+   QR UPLOAD
+========================================================= */
+
+.qr-upload{
+    border:
+        1.5px dashed
+        #cfd2dc;
+
+    border-radius:17px;
+
+    min-height:170px;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:20px;
+
+    background:#fafaff;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+.qr-upload:hover{
+    border-color:var(--blue);
+    background:#f7f8ff;
+}
+
+.qr-icon{
+    width:50px;
+    height:50px;
+
+    border-radius:15px;
+
+    background:#eef0ff;
+    color:var(--blue);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:10px;
+}
+
+.qr-icon svg{
+    width:25px;
+    height:25px;
+}
+
+.qr-upload strong{
+    font-size:12px;
+}
+
+.qr-upload p{
+    margin-top:5px;
+    color:#9295a1;
+    font-size:9px;
+}
+
+#qrFile{
+    display:none;
+}
+
+
+/* =========================================================
+   MEDIA UPLOAD
+========================================================= */
+
+.media-upload{
+    border:
+        1.5px dashed
+        #cfd2dc;
+
+    border-radius:17px;
+
+    min-height:190px;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:22px;
+
+    background:#fafaff;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+.media-upload:hover{
+    border-color:var(--blue);
+    background:#f7f8ff;
+}
+
+.media-upload-icon{
+    width:52px;
+    height:52px;
+
+    border-radius:15px;
+
+    background:#eef0ff;
+    color:var(--blue);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:11px;
+}
+
+.media-upload-icon svg{
+    width:26px;
+    height:26px;
+}
+
+.media-upload strong{
+    font-size:12px;
+}
+
+.media-upload p{
+    margin-top:5px;
+    color:#9295a1;
+    font-size:9px;
+    line-height:1.45;
+}
+
+.media-file{
+    display:none;
+}
+
+.media-preview{
+    display:none;
+    margin-top:14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:15px;
+
+    padding:10px;
+
+    background:white;
+}
+
+.media-preview.show{
+    display:block;
+}
+
+.media-preview img,
+.media-preview video{
+    width:100%;
+    max-height:220px;
+
+    object-fit:contain;
+
+    border-radius:10px;
+
+    background:#f4f5f9;
+}
+
+.audio-preview{
+    display:none;
+    margin-top:14px;
+    width:100%;
+}
+
+.audio-preview.show{
+    display:block;
+}
+
+.audio-preview audio{
+    width:100%;
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result{
+    display:none;
+
+    margin-top:15px;
+
+    border-radius:17px;
+
+    padding:16px;
+
+    animation:
+        resultIn
+        .25s
+        ease;
+}
+
+.result.show{
+    display:block;
+}
+
+@keyframes resultIn{
+
+    from{
+        opacity:0;
+        transform:translateY(8px);
     }
 
-    .back {
-        display: none;
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.result.safe{
+    background:var(--green-bg);
+    border:1px solid #ccefe0;
+}
+
+.result.warning{
+    background:var(--orange-bg);
+    border:1px solid #f8dfc5;
+}
+
+.result.danger{
+    background:var(--red-bg);
+    border:1px solid #f4ced1;
+}
+
+.result-head{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.result-icon{
+    width:40px;
+    height:40px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+
+    background:white;
+}
+
+.result-title{
+    font-size:13px;
+    font-weight:800;
+}
+
+.result-level{
+    margin-top:3px;
+
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:.5px;
+}
+
+.result-body{
+    margin-top:12px;
+
+    color:#646774;
+
+    font-size:9px;
+    line-height:1.6;
+}
+
+.reason-list{
+    margin-top:8px;
+    padding-left:16px;
+}
+
+.reason-list li{
+    margin:3px 0;
+}
+
+
+/* =========================================================
+   SCORE RESULT
+========================================================= */
+
+.link-score-result{
+    text-align:center;
+}
+
+.link-score{
+    font-size:43px;
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:-1.5px;
+}
+
+.link-score-label{
+    margin-top:7px;
+
+    color:#858896;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+}
+
+.link-risk{
+    margin-top:15px;
+
+    font-size:14px;
+
+    font-weight:900;
+
+    letter-spacing:1.5px;
+}
+
+.link-risk.safe{
+    color:#079764;
+}
+
+.link-risk.warning{
+    color:#d77c1d;
+}
+
+.link-risk.danger{
+    color:#d94350;
+}
+
+.full-report-button{
+    width:100%;
+    height:43px;
+
+    margin-top:17px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5367ff,
+            #6476ff
+        );
+
+    color:white;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(83,103,255,.18);
+
+    transition:.2s ease;
+}
+
+.full-report-button:hover{
+    transform:translateY(-1px);
+}
+
+.full-report-button:active{
+    transform:scale(.98);
+}
+
+.again-button{
+    width:100%;
+    height:43px;
+
+    margin-top:11px;
+
+    border:
+        1px solid
+        #dfe1e8;
+
+    border-radius:12px;
+
+    background:white;
+
+    color:#313342;
+
+    font-size:9px;
+    font-weight:800;
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.info-section{
+    margin-top:30px;
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:12px;
+}
+
+.section-title{
+    font-family:Manrope;
+    font-size:18px;
+    font-weight:800;
+}
+
+.section-subtitle{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.info-card{
+    padding:17px;
+
+    background:white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:18px;
+}
+
+.info-icon{
+    width:38px;
+    height:38px;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#eef0ff;
+
+    color:var(--blue);
+
+    margin-bottom:11px;
+}
+
+.info-card:nth-child(2) .info-icon{
+    background:#eafbf4;
+    color:#17a976;
+}
+
+.info-card:nth-child(3) .info-icon{
+    background:#fff1e7;
+    color:#eb853c;
+}
+
+.info-icon svg{
+    width:19px;
+    height:19px;
+}
+
+.info-card strong{
+    font-size:12px;
+    font-weight:800;
+}
+
+.info-card p{
+    margin-top:5px;
+
+    color:#858896;
+
+    font-size:9px;
+
+    line-height:1.55;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    background:var(--navy);
+
+    color:#989cb7;
+
+    padding:
+        27px
+        30px
+        95px;
+}
+
+.footer-inner{
+    max-width:1050px;
+    margin:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+}
+
+.footer strong{
+    color:white;
+    font-size:11px;
+}
+
+.footer p{
+    margin-top:5px;
+    font-size:9px;
+    line-height:1.5;
+}
+
+.footer a{
+    color:#6fdcff;
+    text-decoration:none;
+}
+
+
+/* =========================================================
+   MOBILE NAV
+========================================================= */
+
+.bottom-nav{
+    position:fixed;
+
+    bottom:0;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    width:min(
+        100%,
+        1180px
+    );
+
+    height:76px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .97
+        );
+
+    backdrop-filter:
+        blur(18px);
+
+    border-top:
+        1px solid
+        #e3e4e9;
+
+    box-shadow:
+        0 -8px 25px
+        rgba(20,25,60,.08);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-around;
+
+    z-index:100;
+}
+
+.bottom-item{
+    width:25%;
+    height:100%;
+
+    border:0;
+
+    background:none;
+
+    color:#858896;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    font-size:8px;
+    font-weight:700;
+}
+
+.bottom-item svg{
+    width:20px;
+    height:20px;
+}
+
+.bottom-item.active{
+    color:var(--blue);
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:92px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    padding:
+        11px
+        16px;
+
+    border-radius:12px;
+
+    background:#11132e;
+    color:white;
+
+    font-size:9px;
+    font-weight:700;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s ease;
+
+    z-index:200;
+
+    white-space:nowrap;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width:801px){
+
+    html{
+        scroll-behavior:smooth;
     }
 
-    .hero {
-        padding: 45px 16px 35px;
+    body{
+        background:#e8eaf1;
+        overflow-x:hidden;
+        overflow-y:auto;
     }
 
-    .hero h1 {
-        font-size: 43px;
+    .app{
+        width:100%;
+        max-width:100vw;
+        margin:0;
+        overflow-x:hidden;
     }
 
-    .eco-badge {
-        font-size: 11px;
+    .header{
+        width:100%;
+        padding:0 clamp(24px,4vw,60px);
     }
 
-    .hero-subtitle {
-        font-size: 14px;
+    .hero{
+        width:100%;
+        min-height:420px;
+        padding:50px clamp(24px,4vw,60px) 160px;
     }
 
-    .download-card {
-        border-radius: 19px;
-        padding: 22px 16px;
+    .hero-content{
+        width:100%;
+        max-width:1280px;
+        margin:auto;
     }
 
-    .features,
-    .environment,
-    .steps {
-        padding-left: 16px;
-        padding-right: 16px;
+    .hero h1{
+        max-width:850px;
+        font-size:clamp(42px,4.5vw,64px);
     }
 
-    .eco-points {
-        grid-template-columns: 1fr;
+    .hero p{
+        max-width:680px;
+        font-size:14px;
     }
 
-    .environment-box {
-        border-radius: 22px;
+    .main{
+        width:calc(100% - 48px);
+        max-width:1280px;
+        margin:-130px auto 80px;
     }
 
-    .section-heading h2 {
-        font-size: 28px;
+    .scanner-card{
+        width:100%;
+        border-radius:26px;
+        padding:36px 40px;
+        box-shadow:0 20px 60px rgba(7,10,48,.12);
+        border:1px solid #e3e5ec;
+    }
+
+    .scanner-title{
+        font-size:23px;
+    }
+
+    .scanner-subtitle,
+    .panel-description{
+        font-size:11px;
+    }
+
+    .tabs{
+        gap:9px;
+        padding:6px;
+        margin-bottom:22px;
+    }
+
+    .tab{
+        min-height:72px;
+    }
+
+    .tab svg{
+        width:21px;
+        height:21px;
+    }
+
+    .tab span{
+        font-size:10px;
+    }
+
+    .live-panel{
+        min-height:360px;
+        max-height:520px;
+        overflow-y:auto;
+        padding:28px;
+        border-radius:18px;
+    }
+
+    .live-panel::-webkit-scrollbar{
+        width:6px;
+    }
+
+    .live-panel::-webkit-scrollbar-track{
+        background:#f1f3f7;
+        border-radius:10px;
+    }
+
+    .live-panel::-webkit-scrollbar-thumb{
+        background:#c4cad9;
+        border-radius:10px;
+    }
+
+    .live-panel::-webkit-scrollbar-thumb:hover{
+        background:#a8b0c3;
+    }
+
+    .panel-heading{
+        font-size:19px;
+    }
+
+    .input{
+        height:51px;
+        font-size:13px;
+    }
+
+    textarea.input{
+        height:145px;
+    }
+
+    .check-button{
+        height:51px;
+        font-size:11px;
+    }
+
+    .qr-upload{
+        min-height:185px;
+    }
+
+    .media-upload{
+        min-height:185px;
+    }
+
+    .result{
+        max-height:440px;
+        overflow-y:auto;
+    }
+
+    .result::-webkit-scrollbar{
+        width:5px;
+    }
+
+    .result::-webkit-scrollbar-track{
+        background:#f1f3f7;
+        border-radius:10px;
+    }
+
+    .result::-webkit-scrollbar-thumb{
+        background:#d0d5e0;
+        border-radius:10px;
+    }
+
+    .info-section{
+        margin-top:40px;
+    }
+
+    .section-title{
+        font-size:21px;
+    }
+
+    .info-grid{
+        gap:17px;
+    }
+
+    .bottom-nav{
+        display:none !important;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (
+    min-width:601px
+)
+and (
+    max-width:800px
+){
+
+    .header{
+        height:64px;
+        padding:0 20px;
+    }
+
+    .brand{
+        font-size:16px;
+    }
+
+    .hero{
+        min-height:405px;
+
+        padding:
+            32px
+            22px
+            145px;
+    }
+
+    .hero h1{
+        max-width:700px;
+
+        font-size:
+            clamp(
+                34px,
+                6vw,
+                48px
+            );
+
+        letter-spacing:-1.8px;
+    }
+
+    .hero p{
+        max-width:570px;
+        font-size:11.5px;
+    }
+
+    .main{
+        width:
+            calc(
+                100% - 32px
+            );
+
+        max-width:760px;
+
+        margin:
+            -110px
+            auto
+            85px;
+    }
+
+    .scanner-card{
+        padding:20px;
+        border-radius:27px;
+    }
+
+    .tabs{
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+    .info-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:600px){
+
+    html,
+    body{
+        width:100%;
+        max-width:100%;
+        overflow-x:hidden;
+    }
+
+    body{
+        background:var(--bg);
+    }
+
+    .app{
+        width:100%;
+        max-width:100%;
+        min-height:100vh;
+        overflow:hidden;
+    }
+
+    .header{
+        height:60px;
+        min-height:60px;
+        padding:0 14px;
+    }
+
+    .brand{
+        min-width:0;
+        gap:8px;
+        font-size:15px;
+        white-space:nowrap;
+    }
+
+    .logo{
+        width:34px;
+        height:34px;
+        border-radius:10px;
+    }
+
+    .header-actions{
+        gap:6px;
+    }
+
+    .header-button{
+        width:36px;
+        height:36px;
+        border-radius:10px;
+    }
+
+    .hero{
+        min-height:405px;
+
+        padding:
+            27px
+            16px
+            145px;
+    }
+
+    .hero-content{
+        width:100%;
+    }
+
+    .badge{
+        max-width:100%;
+
+        padding:
+            7px
+            10px;
+
+        font-size:8px;
+        letter-spacing:.35px;
+    }
+
+    .hero h1{
+        max-width:100%;
+
+        margin-top:16px;
+
+        font-size:
+            clamp(
+                30px,
+                9vw,
+                38px
+            );
+
+        line-height:1.06;
+        letter-spacing:-1.5px;
+    }
+
+    .hero p{
+        max-width:100%;
+        margin-top:13px;
+
+        font-size:10.5px;
+        line-height:1.65;
+    }
+
+    .main{
+        width:
+            calc(
+                100% - 24px
+            );
+
+        max-width:none;
+
+        margin:
+            -118px
+            auto
+            82px;
+    }
+
+    .scanner-card{
+        width:100%;
+        padding:14px;
+        border-radius:23px;
+    }
+
+    .scanner-header{
+        align-items:flex-start;
+        gap:9px;
+        margin-bottom:14px;
+    }
+
+    .scanner-title{
+        font-size:16px;
+        line-height:1.2;
+    }
+
+    .scanner-subtitle{
+        max-width:210px;
+        margin-top:4px;
+
+        font-size:9px;
+        line-height:1.4;
+    }
+
+    .ready{
+        flex-shrink:0;
+
+        padding:
+            7px
+            8px;
+
+        font-size:7px;
+        border-radius:9px;
+    }
+
+    /* Horizontal mobile tabs */
+
+    .tabs{
+        width:100%;
+
+        display:flex;
+
+        overflow-x:auto;
+        overflow-y:hidden;
+
+        justify-content:flex-start;
+
+        scrollbar-width:none;
+
+        -webkit-overflow-scrolling:touch;
+
+        gap:4px;
+
+        padding:4px;
+
+        margin-bottom:14px;
+
+        border-radius:15px;
+    }
+
+    .tabs::-webkit-scrollbar{
+        display:none;
+    }
+
+    .tab{
+        flex:
+            0 0 82px;
+
+        width:82px;
+
+        min-width:82px;
+
+        min-height:58px;
+
+        padding:
+            5px
+            2px;
+
+        gap:4px;
+
+        border-radius:11px;
+    }
+
+    .tab svg{
+        width:18px;
+        height:18px;
+        flex-shrink:0;
+    }
+
+    .tab span{
+        font-size:7.5px;
+        line-height:1;
+        white-space:nowrap;
+    }
+
+    .live-panel{
+        width:100%;
+        min-height:300px;
+
+        padding:14px;
+
+        border-radius:18px;
+    }
+
+    .panel-top{
+        align-items:flex-start;
+        margin-bottom:13px;
+    }
+
+    .panel-heading{
+        font-size:16px;
+        line-height:1.2;
+    }
+
+    .panel-description{
+        max-width:100%;
+        font-size:9px;
+        line-height:1.5;
+    }
+
+    .input-label{
+        margin-bottom:6px;
+        font-size:8px;
+    }
+
+    .input{
+        width:100%;
+        min-width:0;
+
+        height:47px;
+
+        padding:
+            0
+            12px;
+
+        border-radius:12px;
+
+        font-size:12px;
+    }
+
+    textarea.input{
+        min-height:125px;
+        height:125px;
+        padding:12px;
+    }
+
+    .check-button{
+        height:47px;
+        margin-top:10px;
+        border-radius:12px;
+        font-size:9px;
+    }
+
+    .qr-upload{
+        width:100%;
+        min-height:155px;
+
+        padding:
+            16px
+            12px;
+
+        border-radius:15px;
+    }
+
+    .qr-icon{
+        width:45px;
+        height:45px;
+        border-radius:13px;
+        margin-bottom:8px;
+    }
+
+    .qr-upload strong{
+        font-size:11px;
+    }
+
+    .qr-upload p{
+        max-width:220px;
+        font-size:8px;
+        line-height:1.4;
+    }
+
+    .media-upload{
+        min-height:165px;
+        padding:
+            18px
+            12px;
+    }
+
+    .result{
+        margin-top:12px;
+        padding:13px;
+        border-radius:15px;
+    }
+
+    .result-head{
+        gap:9px;
+    }
+
+    .result-icon{
+        width:36px;
+        height:36px;
+        border-radius:10px;
+        font-size:17px;
+    }
+
+    .result-title{
+        font-size:12px;
+    }
+
+    .result-level{
+        font-size:7px;
+    }
+
+    .result-body{
+        margin-top:10px;
+        font-size:8.5px;
+        line-height:1.55;
+    }
+
+    .link-score{
+        font-size:40px;
+    }
+
+    .link-risk{
+        font-size:13px;
+    }
+
+    .full-report-button{
+        height:42px;
+        font-size:8.5px;
+    }
+
+    .again-button{
+        height:40px;
+        font-size:8px;
+        border-radius:11px;
+    }
+
+    .info-section{
+        margin-top:24px;
+    }
+
+    .section-header{
+        margin-bottom:10px;
+    }
+
+    .section-title{
+        font-size:16px;
+    }
+
+    .section-subtitle{
+        font-size:8px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+        gap:9px;
+    }
+
+    .info-card{
+        padding:14px;
+        border-radius:15px;
+    }
+
+    .footer{
+        padding:
+            22px
+            14px
+            95px;
+    }
+
+    .footer-inner{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width:430px){
+
+    .header{
+        padding:0 12px;
+    }
+
+    .brand{
+        font-size:14px;
+    }
+
+    .logo{
+        width:32px;
+        height:32px;
+    }
+
+    .hero{
+        min-height:390px;
+
+        padding:
+            24px
+            14px
+            140px;
+    }
+
+    .hero h1{
+        font-size:29px;
+        letter-spacing:-1.25px;
+    }
+
+    .hero p{
+        font-size:10px;
+    }
+
+    .main{
+        width:
+            calc(
+                100% - 20px
+            );
+
+        margin:
+            -112px
+            auto
+            76px;
+    }
+
+    .scanner-card{
+        padding:12px;
+        border-radius:21px;
+    }
+
+    .scanner-title{
+        font-size:15px;
+    }
+
+    .scanner-subtitle{
+        font-size:8px;
+        max-width:190px;
+    }
+
+    .ready{
+        padding:
+            6px
+            7px;
+
+        font-size:6.5px;
+    }
+
+    .tab{
+        flex-basis:82px;
+        width:82px;
+    }
+
+    .live-panel{
+        padding:13px;
+        min-height:290px;
+    }
+
+    .panel-heading{
+        font-size:15px;
+    }
+
+    .panel-description{
+        font-size:8.5px;
+    }
+
+    .input{
+        height:46px;
+        font-size:11.5px;
+    }
+
+    textarea.input{
+        height:118px;
+        min-height:118px;
+    }
+
+    .check-button{
+        height:46px;
+        font-size:8.5px;
+    }
+
+    .qr-upload{
+        min-height:145px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL
+========================================================= */
+
+@media (max-width:360px){
+
+    .brand{
+        font-size:13px;
+    }
+
+    .logo{
+        width:30px;
+        height:30px;
+    }
+
+    .header-button{
+        width:34px;
+        height:34px;
+    }
+
+    .hero{
+        min-height:385px;
+
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .hero h1{
+        font-size:27px;
+    }
+
+    .main{
+        width:
+            calc(
+                100% - 16px
+            );
+
+        margin:
+            -108px
+            auto
+            72px;
+    }
+
+    .scanner-card{
+        padding:10px;
+    }
+
+    .scanner-header{
+        gap:6px;
+    }
+
+    .scanner-title{
+        font-size:14px;
+    }
+
+    .scanner-subtitle{
+        font-size:7.5px;
+    }
+
+    .ready{
+        padding:
+            5px
+            6px;
+
+        font-size:6px;
+    }
+
+    .tabs{
+        gap:2px;
+        padding:3px;
+    }
+
+    .tab{
+        min-height:53px;
+    }
+
+    .tab svg{
+        width:16px;
+        height:16px;
+    }
+
+    .tab span{
+        font-size:6.5px;
+    }
+
+    .live-panel{
+        padding:11px;
+    }
+}
+
+</style>
+
+
+<style id="safnex-qr-home-only">
+#qrResult .qr-home-status{
+    margin-top:18px;
+    padding:18px;
+    border-radius:16px;
+    border:1px solid #dfe6f1;
+    background:#fff;
+    animation:qrHomeIn .25s ease both;
+}
+#qrResult .qr-home-status.safe{
+    border-color:rgba(19,166,115,.32);
+    background:linear-gradient(135deg,#ffffff,#f4fcf8);
+}
+#qrResult .qr-home-status.unsafe{
+    border-color:rgba(230,77,97,.32);
+    background:linear-gradient(135deg,#ffffff,#fff6f7);
+}
+#qrResult .qr-home-verdict{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.2;
+}
+#qrResult .qr-home-dot{
+    width:10px;
+    height:10px;
+    min-width:10px;
+    border-radius:50%;
+}
+#qrResult .safe .qr-home-dot{
+    background:#13a673;
+    box-shadow:0 0 0 6px rgba(19,166,115,.10);
+}
+#qrResult .unsafe .qr-home-dot{
+    background:#e64d61;
+    box-shadow:0 0 0 6px rgba(230,77,97,.10);
+}
+#qrResult .qr-full-report{
+    width:100%;
+    margin-top:14px;
+}
+@keyframes qrHomeIn{
+    from{opacity:0;transform:translateY(7px)}
+    to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:600px){
+    #qrResult .qr-home-status{
+        margin-top:12px;
+        padding:14px;
+        border-radius:14px;
+    }
+    #qrResult .qr-home-verdict{
+        font-size:17px;
     }
 }
 </style>
+
+
+<style id="econex-green-theme">
+:root{
+    --navy:#063b2a;
+    --navy2:#0a5139;
+    --blue:#129b63;
+    --blue2:#20b873;
+    --cyan:#8be7b7;
+    --green:#16a66a;
+    --green-bg:#eafaf1;
+    --text:#10251c;
+    --muted:#708278;
+    --bg:#f2fbf6;
+    --white:#ffffff;
+    --border:#dceee4;
+    --shadow:0 25px 70px rgba(7,75,45,.14);
+}
+
+body{
+    background:
+        radial-gradient(circle at 8% 12%, rgba(57,185,119,.10), transparent 24%),
+        radial-gradient(circle at 92% 30%, rgba(144,226,177,.12), transparent 26%),
+        #e9f6ef;
+}
+
+.app{
+    background:#f2fbf6;
+}
+
+.header{
+    background:
+        linear-gradient(135deg,#043624 0%,#075b3d 58%,#0c7950 100%);
+    box-shadow:0 10px 35px rgba(0,65,39,.16);
+}
+
+.logo{
+    background:linear-gradient(135deg,#7ce3ae,#19a968);
+    box-shadow:0 8px 25px rgba(27,190,112,.28);
+}
+
+.brand span{
+    color:#8ff0bd;
+}
+
+.header-button{
+    background:rgba(255,255,255,.09);
+    border-color:rgba(255,255,255,.16);
+}
+
+.hero{
+    background:
+        radial-gradient(circle at 88% 8%,rgba(133,235,176,.24),transparent 27%),
+        radial-gradient(circle at 4% 86%,rgba(25,177,103,.25),transparent 34%),
+        linear-gradient(135deg,#032d21 0%,#07583b 55%,#0a8a58 100%);
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:330px;
+    height:330px;
+    left:-120px;
+    bottom:-210px;
+    border:1px solid rgba(182,255,211,.18);
+    border-radius:50%;
+    box-shadow:
+        0 0 0 45px rgba(182,255,211,.035),
+        0 0 0 90px rgba(182,255,211,.025);
+}
+
+.badge{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(183,255,211,.20);
+    color:#d6f7e4;
+}
+
+.status-dot{
+    background:#8ff0bd;
+    box-shadow:0 0 0 5px rgba(143,240,189,.12);
+}
+
+.hero h1 span{
+    background:linear-gradient(90deg,#ffffff,#9af2c2);
+    -webkit-background-clip:text;
+    background-clip:text;
+}
+
+.hero p{
+    color:#c4e4d2;
+}
+
+.scanner-card{
+    border-color:#dceee4;
+    box-shadow:0 30px 75px rgba(5,74,44,.15);
+}
+
+.scanner-subtitle,
+.panel-description{
+    color:#718379;
+}
+
+.ready{
+    background:#e9f9f0;
+    color:#087c4b;
+}
+
+.ready i{
+    background:#16a66a;
+}
+
+.tabs{
+    background:#e4f3ea;
+}
+
+.econex-tabs{
+    grid-template-columns:repeat(4,1fr);
+}
+
+.tab{
+    color:#718379;
+}
+
+.tab:hover{
+    color:#087c4b;
+    background:rgba(255,255,255,.65);
+}
+
+.tab.active{
+    color:#07804c;
+    box-shadow:0 6px 20px rgba(9,100,58,.10);
+}
+
+.live-panel{
+    background:linear-gradient(135deg,#ffffff,#f4fcf7);
+    border-color:#dceee4;
+}
+
+.input{
+    border-color:#d6e8de;
+}
+
+.input:focus{
+    border-color:#18a96b;
+    box-shadow:0 0 0 3px rgba(24,169,107,.10);
+}
+
+.check-button,
+.full-report-button{
+    background:linear-gradient(135deg,#087b4b,#16ad6b);
+    box-shadow:0 10px 25px rgba(11,133,78,.20);
+}
+
+.qr-upload,
+.media-upload{
+    border-color:#c8e2d3;
+    background:#f8fdfa;
+}
+
+.qr-upload:hover,
+.media-upload:hover{
+    border-color:#16a66a;
+    background:#f0fbf5;
+}
+
+.qr-icon,
+.media-upload-icon{
+    background:#e7f8ee;
+    color:#0b9459;
+}
+
+.info-icon{
+    background:#e7f8ee;
+    color:#0b9459;
+}
+
+.info-card:nth-child(2) .info-icon{
+    background:#e4f8ed;
+    color:#0b9459;
+}
+
+.info-card:nth-child(3) .info-icon{
+    background:#eff9e9;
+    color:#5c9b38;
+}
+
+.footer{
+    background:linear-gradient(135deg,#032d21,#07583b);
+    color:#a8cdb9;
+}
+
+.footer a{
+    color:#8ff0bd;
+}
+
+.bottom-nav{
+    border-top-color:#d7eae0;
+}
+
+.bottom-item.active{
+    color:#079455;
+}
+
+.toast{
+    background:#063b2a;
+}
+
+@media(max-width:600px){
+    .econex-tabs .tab{
+        flex:1 0 76px;
+        width:76px;
+        min-width:76px;
+    }
+}
+
+@media(min-width:801px){
+    .econex-tabs{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+</style>
+
 </head>
+
 
 <body>
 
-<!-- HEADER -->
+<div class="app">
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header class="header">
 
-    <a href="home.html" class="brand">
+    <div class="brand">
 
         <div class="logo">
 
-            <!-- Eco leaf logo -->
-            <svg viewBox="0 0 64 64"
-                 fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
+            <img
+                src="logo.jpeg"
+                alt="ECONEX NOVA logo"
+            >
 
-                <path
-                    d="M53 8C35 9 19 14 13 27C7 40 15 53 28 53C43 53 54 39 53 8Z"
-                    fill="white"
-                    opacity=".95"/>
+        </div>
 
-                <path
-                    d="M14 49C23 39 31 29 45 19"
-                    stroke="#15803D"
-                    stroke-width="4"
-                    stroke-linecap="round"/>
+        ECONEX
+        <span>NOVA</span>
 
-                <path
-                    d="M28 35C25 30 25 25 27 21"
-                    stroke="#15803D"
-                    stroke-width="3"
-                    stroke-linecap="round"/>
+    </div>
+
+
+    <div class="header-actions">
+
+        <button
+            id="extensionBadge"
+            class="header-button extension-badge"
+            onclick="showExtensionInfo()"
+            style="display:none;"
+            aria-label="Extension active"
+            title="ECONEX Link Guard is protecting you"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="
+                    M12 3
+                    20 6
+                    v5
+                    c0 5-3.4 8.8-8 10
+                    -4.6-1.2-8-5-8-10V6
+                    l8-3Z
+                "/>
+
+                <path d="m9 12 2 2 4-4"/>
 
             </svg>
 
+            <span class="extension-pulse"></span>
+
+        </button>
+
+        <div style="position:relative;">
+            <button
+                class="header-button"
+                onclick="toggleMenu()"
+                aria-label="Menu"
+                title="Menu"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+
+            <div
+                id="dropdownMenu"
+                style="
+                    display:none;
+                    position:absolute;
+                    top:calc(100% + 10px);
+                    right:0;
+                    min-width:220px;
+                    background:#1a1d29;
+                    border:1px solid rgba(255,255,255,0.2);
+                    border-radius:12px;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+                    z-index:1000;
+                    overflow:hidden;
+                "
+            >
+                <div id="downloadExtOption" style="
+                    padding:12px 20px;
+                    cursor:pointer;
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    color:white;
+                    transition:background 0.2s;
+                    border-bottom:1px solid rgba(255,255,255,0.1);
+                " onclick="installExtension()" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                    <span style="font-size:20px;">📥</span>
+                    <div>
+                        <div style="font-weight:600;font-size:14px;">Get Extension</div>
+                        <div style="font-size:11px;color:#9ca3af;">One-click protection</div>
+                    </div>
+                </div>
+
+                <a href="home.html" style="
+                    padding:12px 20px;
+                    cursor:pointer;
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    color:white;
+                    text-decoration:none;
+                    transition:background 0.2s;
+                " onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                    <span style="font-size:20px;">🏠</span>
+                    <div style="font-weight:600;font-size:14px;">Home</div>
+                </a>
+            </div>
         </div>
 
-        <div class="brand-name">
-            ECONEX <span>NOVA</span>
-        </div>
-
-    </a>
-
-    <a href="home.html" class="back">
-        ← Back to Home
-    </a>
+    </div>
 
 </header>
 
 
-<!-- HERO -->
+<!-- =========================================================
+     HERO
+========================================================= -->
 
 <section class="hero">
 
-    <div class="eco-badge">
-        <span class="eco-dot"></span>
-        ENVIRONMENTAL AI • NEXT GENERATION
-    </div>
+    <div class="hero-content">
 
-    <div id="statusBanner" class="status-banner">
+        <div class="badge">
 
-        <div class="status-dot"></div>
+            <i class="status-dot"></i>
 
-        <span id="statusText">
-            Extension Not Installed
-        </span>
-
-    </div>
-
-    <h1>
-        Protect the Web.
-        <em>Protect the Planet.</em>
-    </h1>
-
-    <p class="hero-subtitle">
-
-        Meet <strong>ECONEX NOVA</strong> —
-        an intelligent environmental technology platform
-        designed to help people understand digital risks,
-        environmental problems and take smarter sustainable action.
-
-    </p>
-
-
-    <!-- DOWNLOAD -->
-
-    <div class="download-card">
-
-        <div class="card-top">
-
-            <span class="card-icon">🌱</span>
-
-            <span>
-                ECONEX NOVA Desktop Extension
-            </span>
+            ECONEX NOVA DIGITAL SAFETY
 
         </div>
 
-        <button
-            id="downloadBtn"
-            class="download-btn"
-            onclick="downloadExtension()">
 
-            <span>⬇️</span>
+        <h1>
 
-            <span>
-                Download ECONEX NOVA
-            </span>
+            Check before you
+            <span>click, call or reply.</span>
 
-        </button>
+        </h1>
 
-        <div class="alt-download">
-
-            Or get the extension directly from
-
-            <a
-                href="https://github.com/muthukrishnan88/nova/raw/main/safnex-extension.zip"
-                target="_blank"
-                rel="noopener">
-
-                GitHub
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- FEATURES -->
-
-<section class="features">
-
-    <div class="feature">
-
-        <div class="feature-icon">
-            🛡️
-        </div>
-
-        <h3>
-            Intelligent Protection
-        </h3>
 
         <p>
-            Analyze suspicious websites and identify
-            potentially dangerous digital destinations
-            before interacting with them.
-        </p>
 
-    </div>
+            Analyze suspicious phone numbers,
+            messages, links and QR codes with one
+            simple digital safety checker.
 
-
-    <div class="feature">
-
-        <div class="feature-icon">
-            🤖
-        </div>
-
-        <h3>
-            AI Intelligence
-        </h3>
-
-        <p>
-            Combine intelligent analysis with clear
-            explanations so users can understand
-            what they are seeing.
-        </p>
-
-    </div>
-
-
-    <div class="feature">
-
-        <div class="feature-icon">
-            🌍
-        </div>
-
-        <h3>
-            Green Technology
-        </h3>
-
-        <p>
-            Built around a bigger vision:
-            using AI and technology to support
-            environmental awareness and sustainability.
         </p>
 
     </div>
@@ -1053,360 +2961,844 @@ code {
 </section>
 
 
-<!-- ENVIRONMENT VISION -->
+<!-- =========================================================
+     MAIN
+========================================================= -->
 
-<section class="environment">
+<main
+    class="main"
+    id="scanner"
+>
 
-    <div class="environment-box">
+
+<section class="scanner-card">
+
+
+    <div class="scanner-header">
 
         <div>
 
-            <h2>
-                AI for a
-                <span>Greener Future</span>
-            </h2>
+            <div class="scanner-title">
+                Digital Safety Check
+            </div>
 
-            <p class="environment-text">
+            <div class="scanner-subtitle">
+                Choose what you want ECONEX NOVA to analyze
+            </div>
 
-                ECONEX NOVA brings artificial intelligence,
-                environmental awareness and digital
-                technology together in one ecosystem.
+        </div>
 
-                The platform can evolve from detecting
-                environmental problems to identifying waste,
-                analyzing materials, measuring impact and
-                recommending sustainable actions.
 
-            </p>
+        <div class="ready">
+
+            <i></i>
+
+            READY
+
+        </div>
+
+    </div>
+    <!-- =====================================================
+         ECONEX NOVA — MAIN SAFETY TOOLS
+    ====================================================== -->
+
+    <div class="tabs econex-tabs">
+
+        <!-- URL -->
+        <button class="tab active" type="button"
+                onclick="window.location.href='link.html'"
+                aria-label="Open URL safety checker">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.1.1l2-2A5 5 0 0 0 12 4l-1.1 1.1"/>
+                <path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/>
+            </svg>
+            <span>URL</span>
+        </button>
+
+        <!-- QR -->
+        <button class="tab" type="button"
+                onclick="window.location.href='qr-detector.html'"
+                aria-label="Open QR safety checker">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h6v6H4z"/>
+                <path d="M14 4h6v6h-6z"/>
+                <path d="M4 14h6v6H4z"/>
+                <path d="M14 14h2"/>
+                <path d="M18 14h2v2"/>
+                <path d="M14 18h2v2"/>
+                <path d="M18 18h2"/>
+            </svg>
+            <span>QR</span>
+        </button>
+
+        <!-- VIDEO -->
+        <button class="tab" type="button"
+                onclick="window.location.href='video-detector.html'"
+                aria-label="Open video safety checker">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="5" width="13" height="14" rx="2"/>
+                <path d="m16 10 5-3v10l-5-3z"/>
+            </svg>
+            <span>VIDEO</span>
+        </button>
+
+        <!-- IMAGE -->
+        <button class="tab" type="button"
+                onclick="window.location.href='image.html'"
+                aria-label="Open image safety checker">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                <circle cx="8.5" cy="9" r="1.5"/>
+                <path d="m21 15-5-5L5 20"/>
+            </svg>
+            <span>IMAGE</span>
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         LIVE PANEL
+    ====================================================== -->
+
+    <div
+        class="live-panel"
+        id="livePanel"
+    >
+
+
+        <!-- =================================================
+             LINK VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="linkView"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Check Link
+                    </div>
+
+                    <div class="panel-description">
+                        Paste a URL to inspect common risk signals.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label class="input-label">
+                WEBSITE / URL
+            </label>
+
+
+            <input
+                class="input"
+                id="linkInput"
+                type="url"
+                placeholder="https://example.com"
+                autocomplete="off"
+            >
+
+
+            <button
+                class="check-button"
+                onclick="checkLink()"
+            >
+                CHECK LINK
+            </button>
+
+
+            <div
+                class="result"
+                id="linkResult"
+            ></div>
 
         </div>
 
 
-        <div class="eco-points">
+        <!-- =================================================
+             PHONE VIEW
+        ================================================== -->
 
-            <div class="eco-point">
-                ♻️
-                Waste Detection
+        <div
+            class="scanner-view"
+            id="phoneView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Check Phone Number
+                    </div>
+
+                    <div class="panel-description">
+                        Check the number using the ECONEX NOVA phone analysis engine.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="eco-point">
-                🌱
-                Green Impact
-            </div>
 
-            <div class="eco-point">
-                📷
-                AI Vision
-            </div>
+            <label class="input-label">
+                PHONE NUMBER
+            </label>
 
-            <div class="eco-point">
-                🧠
-                Smart Analysis
-            </div>
 
-            <div class="eco-point">
-                🌍
-                Sustainability
-            </div>
+            <input
+                class="input"
+                id="phoneInput"
+                type="tel"
+                inputmode="tel"
+                placeholder="+91 98765 43210"
+                autocomplete="off"
+            >
 
-            <div class="eco-point">
-                ⚡
-                Smart Actions
-            </div>
+
+            <button
+                class="check-button"
+                onclick="checkPhone()"
+            >
+                CHECK PHONE NUMBER
+            </button>
+
+
+            <div
+                class="result"
+                id="phoneResult"
+            ></div>
 
         </div>
+
+
+        <!-- =================================================
+             MESSAGE VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="messageView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Check Message Screenshot
+                    </div>
+
+                    <div class="panel-description">
+                        Upload a screenshot of SMS, WhatsApp or email message.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="media-upload"
+                for="messageFile"
+                id="messageUploadArea"
+            >
+
+                <div class="media-upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <path d="
+                            M20 15
+                            a3 3 0 0 1-3 3
+                            H9l-5 3v-6
+                            a3 3 0 0 1-2-3V6
+                            a3 3 0 0 1 3-3h12
+                            a3 3 0 0 1 3 3v9Z
+                        "/>
+
+                    </svg>
+
+                </div>
+
+
+                <strong>
+                    Upload Message Screenshot
+                </strong>
+
+
+                <p>
+                    PNG, JPG, JPEG or WEBP screenshot
+                </p>
+
+            </label>
+
+
+            <input
+                class="media-file"
+                id="messageFile"
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                onchange="detectMessage(event)"
+            >
+
+
+            <div
+                class="media-preview"
+                id="messagePreview"
+            ></div>
+
+
+            <div
+                class="result"
+                id="messageResult"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             QR VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="qrView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Check QR Code
+                    </div>
+
+                    <div class="panel-description">
+                        Upload a QR image and ECONEX NOVA will read it.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="qr-upload"
+                for="qrFile"
+            >
+
+                <div class="qr-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <path d="M4 4h6v6H4z"/>
+                        <path d="M14 4h6v6h-6z"/>
+                        <path d="M4 14h6v6H4z"/>
+                        <path d="M14 14h2"/>
+                        <path d="M18 14h2v2"/>
+                        <path d="M14 18h2v2"/>
+                        <path d="M18 18h2"/>
+
+                    </svg>
+
+                </div>
+
+
+                <strong>
+                    Upload QR Code
+                </strong>
+
+
+                <p>
+                    PNG, JPG or WEBP
+                </p>
+
+            </label>
+
+
+            <input
+                id="qrFile"
+                type="file"
+                accept="image/*"
+                onchange="readQR(event)"
+            >
+
+
+            <div
+                class="result"
+                id="qrResult"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             VIDEO VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="videoView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Detect Video
+                    </div>
+
+                    <div class="panel-description">
+                        Upload a video to inspect basic file and media signals.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="media-upload"
+                for="videoFile"
+            >
+
+                <div class="media-upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <rect
+                            x="3"
+                            y="5"
+                            width="13"
+                            height="14"
+                            rx="2"
+                        />
+
+                        <path d="m16 10 5-3v10l-5-3z"/>
+
+                    </svg>
+
+                </div>
+
+
+                <strong>
+                    Upload Video
+                </strong>
+
+
+                <p>
+                    MP4, WEBM, MOV or another supported video file
+                </p>
+
+            </label>
+
+
+            <input
+                class="media-file"
+                id="videoFile"
+                type="file"
+                accept="video/*"
+                onchange="detectVideo(event)"
+            >
+
+
+            <div
+                class="media-preview"
+                id="videoPreview"
+            ></div>
+
+
+            <div
+                class="result"
+                id="videoResult"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             AUDIO VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="audioView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Detect Audio
+                    </div>
+
+                    <div class="panel-description">
+                        Upload an audio file to inspect basic file and media signals.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="media-upload"
+                for="audioFile"
+            >
+
+                <div class="media-upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <path d="M12 3v18"/>
+                        <path d="M8 7v10"/>
+                        <path d="M4 10v4"/>
+                        <path d="M16 6v12"/>
+                        <path d="M20 10v4"/>
+
+                    </svg>
+
+                </div>
+
+
+                <strong>
+                    Upload Audio
+                </strong>
+
+
+                <p>
+                    MP3, WAV, M4A or another supported audio file
+                </p>
+
+            </label>
+
+
+            <input
+                class="media-file"
+                id="audioFile"
+                type="file"
+                accept="audio/*"
+                onchange="detectAudio(event)"
+            >
+
+
+            <div
+                class="audio-preview"
+                id="audioPreview"
+            ></div>
+
+
+            <div
+                class="result"
+                id="audioResult"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             IMAGE VIEW
+        ================================================== -->
+
+        <div
+            class="scanner-view"
+            id="imageView"
+            style="display:none;"
+        >
+
+            <div class="panel-top">
+
+                <div>
+
+                    <div class="panel-heading">
+                        Detect Image
+                    </div>
+
+                    <div class="panel-description">
+                        Upload an image to inspect basic file and image signals.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <label
+                class="media-upload"
+                for="imageFile"
+            >
+
+                <div class="media-upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="16"
+                            rx="2"
+                        />
+
+                        <circle
+                            cx="8.5"
+                            cy="9"
+                            r="1.5"
+                        />
+
+                        <path d="m21 15-5-5L5 20"/>
+
+                    </svg>
+
+                </div>
+
+
+                <strong>
+                    Upload Image
+                </strong>
+
+
+                <p>
+                    PNG, JPG, WEBP or another supported image file
+                </p>
+
+            </label>
+
+
+            <input
+                class="media-file"
+                id="imageFile"
+                type="file"
+                accept="image/*"
+                onchange="detectImage(event)"
+            >
+
+
+            <div
+                class="media-preview"
+                id="imagePreview"
+            ></div>
+
+
+            <div
+                class="result"
+                id="imageResult"
+            ></div>
+
+        </div>
+
 
     </div>
 
 </section>
 
 
-<!-- INSTALLATION -->
+<!-- =========================================================
+     INFORMATION
+========================================================= -->
 
-<section class="steps">
+<section class="info-section">
 
-    <div class="section-heading">
+    <div class="section-header">
 
-        <div class="small">
-            QUICK SETUP
-        </div>
+        <div>
 
-        <h2>
-            Install ECONEX NOVA
-        </h2>
+            <div class="section-title">
+                ECONEX NOVA
+            </div>
 
-    </div>
-
-
-    <div class="step">
-
-        <div class="step-num">
-            1
-        </div>
-
-        <div class="step-content">
-
-            <h3>
-                Download & Extract
-            </h3>
-
-            <p>
-                Download the ZIP package and extract it
-                to a permanent folder on your computer.
-            </p>
+            <div class="section-subtitle">
+                One place for everyday digital safety.
+            </div>
 
         </div>
 
     </div>
 
 
-    <div class="step">
+    <div class="info-grid">
 
-        <div class="step-num">
-            2
-        </div>
 
-        <div class="step-content">
+        <article class="info-card">
 
-            <h3>
-                Open Chrome Extensions
-            </h3>
+            <div class="info-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+
+                    <path d="
+                        M12 3
+                        20 6
+                        v5
+                        c0 5-3.4 8.8-8 10
+                        -4.6-1.2-8-5-8-10V6
+                        l8-3Z
+                    "/>
+
+                    <path d="m9 12 2 2 4-4"/>
+
+                </svg>
+
+            </div>
+
+
+            <strong>
+                Simple protection
+            </strong>
+
 
             <p>
-                Open
-                <code>chrome://extensions/</code>
-                in Google Chrome.
+                Check suspicious content before
+                taking action.
             </p>
 
-        </div>
-
-    </div>
+        </article>
 
 
-    <div class="step">
+        <article class="info-card">
 
-        <div class="step-num">
-            3
-        </div>
+            <div class="info-icon">
 
-        <div class="step-content">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
 
-            <h3>
-                Enable Developer Mode
-            </h3>
+                    <path d="
+                        M20 15
+                        a3 3 0 0 1-3 3
+                        H9l-5 3v-6
+                        a3 3 0 0 1-2-3V6
+                        a3 3 0 0 1 3-3h12
+                        a3 3 0 0 1 3 3v9Z
+                    "/>
+
+                </svg>
+
+            </div>
+
+
+            <strong>
+                Multiple checks
+            </strong>
+
 
             <p>
-                Turn on the
-                <strong>Developer mode</strong>
-                switch in the top-right corner.
+                Phone, message, link and QR
+                analysis in one interface.
             </p>
 
-        </div>
-
-    </div>
+        </article>
 
 
-    <div class="step">
+        <article class="info-card">
 
-        <div class="step-num">
-            4
-        </div>
+            <div class="info-icon">
 
-        <div class="step-content">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
 
-            <h3>
-                Load ECONEX NOVA
-            </h3>
+                    <path d="
+                        M12 3
+                        20 6
+                        v5
+                        c0 5-3.4 8.8-8 10
+                        -4.6-1.2-8-5-8-10V6
+                        l8-3Z
+                    "/>
+
+                    <path d="M12 8v4"/>
+
+                    <circle
+                        cx="12"
+                        cy="15.5"
+                        r=".6"
+                        fill="currentColor"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <strong>
+                Privacy focused
+            </strong>
+
 
             <p>
-                Select
-                <strong>Load unpacked</strong>
-                and choose the extracted extension folder.
+                This page performs basic checks
+                without claiming access to private records.
             </p>
 
-        </div>
-
-    </div>
-
-
-    <div class="step">
-
-        <div class="step-num">
-            5
-        </div>
-
-        <div class="step-content">
-
-            <h3>
-                Start Exploring
-            </h3>
-
-            <p>
-                ECONEX NOVA is now available from
-                your browser toolbar.
-            </p>
-
-        </div>
+        </article>
 
     </div>
 
 </section>
 
+</main>
 
-<!-- FOOTER -->
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <footer class="footer">
 
-    <p>
-        © 2026
-        <strong>ECONEX NOVA</strong>
-        • Environmental Intelligence Platform
-    </p>
+    <div class="footer-inner">
 
-</footer>
+        <div>
 
-
-<script>
-
-/* --------------------------------
-   MOBILE DETECTION
--------------------------------- */
-
-function isMobile() {
-
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
-        .test(navigator.userAgent);
-
-}
-
-
-/* --------------------------------
-   EXTENSION CHECK
--------------------------------- */
-
-function checkExtension() {
-
-    const installed =
-        document.documentElement
-            .hasAttribute("data-safnex-installed");
-
-    const banner =
-        document.getElementById("statusBanner");
-
-    const text =
-        document.getElementById("statusText");
-
-    const btn =
-        document.getElementById("downloadBtn");
-
-
-    /* Mobile */
-
-    if (isMobile()) {
-
-        banner.style.background =
-            "rgba(34,197,94,.08)";
-
-        banner.style.borderColor =
-            "rgba(34,197,94,.22)";
-
-        banner.style.color =
-            "#86efac";
-
-        text.textContent =
-            "📱 Mobile Device • Use ECONEX NOVA Online";
-
-        btn.innerHTML =
-            "<span>🌱</span><span>Open ECONEX NOVA</span>";
-
-        btn.onclick = function () {
-
-            window.location.href =
-                "home.html";
-
-        };
-
-        return;
-    }
-
-
-    /* Installed */
-
-    if (installed) {
-
-        banner.classList.add("installed");
-
-        text.textContent =
-            "✓ ECONEX NOVA Extension Active";
-
-        btn.disabled = true;
-
-        btn.innerHTML =
-            "<span>✓</span><span>Extension Already Installed</span>";
-
-    }
-
-}
-
-
-/* --------------------------------
-   DOWNLOAD EXTENSION
--------------------------------- */
-
-function downloadExtension() {
-
-    const btn =
-        document.getElementById("downloadBtn");
-
-    const original =
-        btn.innerHTML;
-
-
-    btn.innerHTML =
-        "<span>⏳</span><span>Preparing Download...</span>";
-
-    btn.disabled = true;
-
-
-    window.location.href =
-        "safnex-extension.zip";
-
-
-    setTimeout(function () {
-
-        alert(
-            "✓ ECONEX NOVA download started!\\n\\n" +
-            "Installation steps:\\n" +
-            "1. Extract the ZIP file\\n" +
-            "2. Open chrome://extensions/\\n" +
-            "3. Enable Developer mode\\n" +
-            "4. Click Load unpacked\\n" +
-            "5. Select the extracted extension folder"
-        );
-
-
-        btn.innerHTML = original;
-
-        btn.disabled = false;
-
-    }, 900);
-
-}
-
-
-/* --------------------------------
-   INITIALIZE
--------------------------------- */
-
-checkExtension();
-
-setInterval(
-    checkExtension,
-    2000
-);
-
-</script>
-
-</body>
-</html>
-```
+            <strong>
