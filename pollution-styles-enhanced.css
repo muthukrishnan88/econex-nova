@@ -1,0 +1,347 @@
+/* Enhanced Pollution Styles for Evidence-First Analysis */
+/* Add these to existing pollution-styles.css or integrate into image.html */
+
+/* Scene Card */
+.scene-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.scene-card h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.scene-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+}
+
+.scene-quality {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px !important;
+}
+
+/* No Pollution Detected Card */
+.no-pollution-card {
+    background: rgba(57, 229, 140, 0.08);
+    border: 2px solid rgba(57, 229, 140, 0.3);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.no-pollution-icon {
+    font-size: 72px;
+    margin-bottom: 16px;
+    color: var(--green);
+}
+
+.no-pollution-card h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--green);
+}
+
+.no-pollution-reason {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+.no-pollution-recommendation {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 24px;
+    text-align: left;
+}
+
+.no-pollution-recommendation h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.no-pollution-recommendation p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin: 0;
+    white-space: pre-line;
+}
+
+/* Rejected Categories Card */
+.rejected-categories-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.rejected-categories-card h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.rejected-intro {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.rejected-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rejected-item {
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.rejected-check {
+    color: var(--muted);
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.rejected-content {
+    flex: 1;
+}
+
+.rejected-type {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.rejected-reason {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Rejected Categories - Compact Style (for when pollution is detected) */
+.rejected-list-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rejected-item-compact {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+/* Limitations Card */
+.limitations-card {
+    background: rgba(255, 209, 102, 0.08);
+    border: 1px solid rgba(255, 209, 102, 0.2);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.limitations-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--warning);
+    margin-bottom: 14px;
+}
+
+.limitations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.limitations-list li {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 8px 8px 8px 24px;
+    position: relative;
+    margin-bottom: 6px;
+}
+
+.limitations-list li:before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    font-size: 12px;
+}
+
+/* Dev Notice */
+.dev-notice {
+    background: rgba(105, 168, 255, 0.08);
+    border: 1px solid rgba(105, 168, 255, 0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--blue);
+}
+
+.dev-notice strong {
+    font-weight: 700;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 160px;
+}
+
+.action-btn.primary {
+    background: var(--green);
+    color: var(--bg);
+}
+
+.action-btn.primary:hover {
+    background: rgba(57, 229, 140, 0.9);
+    transform: translateY(-2px);
+}
+
+.action-btn.secondary {
+    background: var(--blue);
+    color: white;
+}
+
+.action-btn.secondary:hover {
+    background: rgba(105, 168, 255, 0.9);
+    transform: translateY(-2px);
+}
+
+.action-btn.tertiary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.action-btn.tertiary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Environmental Impact Icons */
+.env-impact-item .env-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .no-pollution-card {
+        padding: 32px 20px;
+    }
+
+    .no-pollution-icon {
+        font-size: 56px;
+    }
+
+    .no-pollution-card h3 {
+        font-size: 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        flex: 1 1 100%;
+    }
+}
+
+/* Gradients for Concern Ring (if not already defined) */
+svg defs {
+    display: none;
+}
+
+.concern-ring-fill.concern-low {
+    stroke: var(--green);
+}
+
+.concern-ring-fill.concern-moderate {
+    stroke: var(--warning);
+}
+
+.concern-ring-fill.concern-moderate-high {
+    stroke: #ff8a65;
+}
+
+.concern-ring-fill.concern-high {
+    stroke: var(--danger);
+}
+
+.concern-ring-fill.concern-critical {
+    stroke: #dc2626;
+}
+
+/* Additional polish for evidence-first design */
+.evidence-first-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(57, 229, 140, 0.15);
+    color: var(--green);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-left: 8px;
+}
+
+.precision-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(57, 229, 140, 0.12);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+}
+
+.precision-indicator::before {
+    content: "✓";
+    font-size: 14px;
+}
