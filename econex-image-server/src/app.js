@@ -9,6 +9,7 @@ import wasteRoutes from "./routes/waste.routes.js";
 import pollutionRoutes from "./routes/pollution.routes.js";
 import disasterRoutes from "./routes/disaster.routes.js";
 import linkRoutes from "./routes/link.routes.js";
+import videoRoutes from "./routes/video.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,7 @@ app.use("/api", wasteRoutes);
 app.use("/api", pollutionRoutes);
 app.use("/api", disasterRoutes);
 app.use("/api", linkRoutes);
+app.use("/api/video", videoRoutes);
 
 app.use("/api", (req, res) => {
     res.status(404).json({
