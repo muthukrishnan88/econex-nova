@@ -192,51 +192,30 @@ export class MockAIProvider {
             imageQuality
         };
 
-        // Build response with evidence-first structure
+        // Build response with OLD structure (for compatibility with current frontend)
         return {
             success: true,
             analysisMode: "AI",
             authenticity,
             scene,
-            pollutionDetected: true,
 
-            // Primary pollution
-            primaryPollution: {
-                type: scenario.pollution.primaryType,
-                label: this._formatPollutionType(scenario.pollution.primaryType),
-                subtype: scenario.pollution.primarySubtype,
+            // OLD structure that frontend expects
+            pollution: {
+                primaryType: scenario.pollution.primaryType,
+                primarySubtype: scenario.pollution.primarySubtype,
                 confidence: scenario.pollution.confidence,
-                evidence: scenario.pollution.visualEvidence
-            },
-
-            // Secondary pollution
-            secondaryPollution: scenario.pollution.secondaryTypes.map(type => ({
-                type,
-                label: this._formatPollutionType(type),
-                confidence: Math.floor(scenario.pollution.confidence * 0.9),
-                evidence: [`Secondary pollution indicator associated with primary ${this._formatPollutionType(scenario.pollution.primaryType)}`]
-            })),
-
-            // Rejected categories (demonstrate negative evidence)
-            rejectedCategories: this._getRejectedCategories(scenario.pollution.primaryType, scenario.pollution.secondaryTypes),
-
-            // Sources
-            likelySources: scenario.pollution.likelySources,
-
-            // Pollutants
-            potentialPollutants: scenario.pollution.potentialPollutants,
-
-            // Concern
-            concern: {
-                score: scenario.pollution.concernScore,
-                level: scenario.pollution.concernLevel,
-                explanation: `Visual pollution concern score based on detected ${this._formatPollutionType(scenario.pollution.primaryType)} with ${scenario.pollution.visualEvidence.length} pieces of visual evidence.`
+                secondaryTypes: scenario.pollution.secondaryTypes,
+                visualEvidence: scenario.pollution.visualEvidence,
+                likelySources: scenario.pollution.likelySources,
+                potentialPollutants: scenario.pollution.potentialPollutants,
+                concernScore: scenario.pollution.concernScore,
+                concernLevel: scenario.pollution.concernLevel
             },
 
             // Health impact
             healthImpact: scenario.healthImpact,
 
-            // Environmental impact (only relevant categories)
+            // Environmental impact
             environmentalImpact: scenario.environmentalImpact,
 
             // Pathway
@@ -267,43 +246,6 @@ export class MockAIProvider {
         };
     }
 
-    _formatPollutionType(type) {
-        return type.split('_').map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-    }
-
-    _getRejectedCategories(primaryType, secondaryTypes) {
-        const allCategories = [
-            "air_pollution",
-            "water_pollution",
-            "land_pollution",
-            "plastic_pollution",
-            "oil_contamination",
-            "sewage_pollution",
-            "industrial_pollution",
-            "waste_burning"
-        ];
-
-        const detectedTypes = [primaryType, ...secondaryTypes];
-        const rejected = allCategories.filter(cat => !detectedTypes.includes(cat));
-
-        const reasons = {
-            air_pollution: "No visible smoke, emissions, or atmospheric pollution indicators detected.",
-            water_pollution: "No contaminated water bodies, discharge, or water pollution evidence visible.",
-            land_pollution: "No significant waste accumulation, dumping, or land contamination detected.",
-            plastic_pollution: "No concentrated plastic waste or pollution accumulation visible.",
-            oil_contamination: "No oil spills, sheens, or petroleum contamination detected.",
-            sewage_pollution: "No visible sewage discharge or wastewater evidence detected.",
-            industrial_pollution: "No industrial emission sources or industrial pollution evidence visible.",
-            waste_burning: "No visible fire, burning activity, or associated smoke detected."
-        };
-
-        return rejected.slice(0, 4).map(type => ({
-            type,
-            reason: reasons[type]
-        }));
-    }
 
     _generateAuthenticity() {
         const random = Math.random();
