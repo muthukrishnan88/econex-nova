@@ -1,0 +1,969 @@
+/* Enhanced pollution-specific styles for ECONEX NOVA */
+/* To be integrated into image.html */
+
+/* Authenticity Card */
+.authenticity-card {
+    padding: 24px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    border: 1px solid;
+}
+
+.authenticity-card.auth-original {
+    background: rgba(57, 229, 140, 0.08);
+    border-color: rgba(57, 229, 140, 0.3);
+}
+
+.authenticity-card.auth-uncertain {
+    background: rgba(255, 209, 102, 0.08);
+    border-color: rgba(255, 209, 102, 0.3);
+}
+
+.authenticity-card.auth-ai {
+    background: rgba(255, 138, 101, 0.08);
+    border-color: rgba(255, 138, 101, 0.3);
+}
+
+.auth-header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.auth-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.auth-content {
+    flex: 1;
+}
+
+.auth-content h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.auth-status {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.auth-original .auth-status {
+    color: var(--green);
+}
+
+.auth-uncertain .auth-status {
+    color: var(--warning);
+}
+
+.auth-ai .auth-status {
+    color: #ff8a65;
+}
+
+.auth-confidence {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.auth-message {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-bottom: 0;
+}
+
+.auth-note {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(255, 138, 101, 0.12);
+    border-radius: 10px;
+    font-size: 13px;
+    color: #ff8a65;
+}
+
+/* Concern Score Card */
+.concern-score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 28px;
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+.concern-ring-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 24px;
+}
+
+.concern-ring {
+    width: 100%;
+    height: 100%;
+}
+
+.concern-ring-fill {
+    transition: stroke-dasharray 1s ease;
+}
+
+.concern-ring-fill.concern-low {
+    stroke: url(#concernGradientLow);
+}
+
+.concern-ring-fill.concern-moderate {
+    stroke: url(#concernGradientModerate);
+}
+
+.concern-ring-fill.concern-moderate-high {
+    stroke: url(#concernGradientModerateHigh);
+}
+
+.concern-ring-fill.concern-high {
+    stroke: url(#concernGradientHigh);
+}
+
+.concern-ring-fill.concern-critical {
+    stroke: url(#concernGradientCritical);
+}
+
+.concern-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.concern-number {
+    font-size: 52px;
+    font-weight: 950;
+    line-height: 1;
+    color: var(--text);
+}
+
+.concern-label {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.concern-score-card h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.concern-level-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.concern-level-badge.level-low {
+    background: rgba(57, 229, 140, 0.15);
+    color: var(--green);
+}
+
+.concern-level-badge.level-moderate {
+    background: rgba(255, 209, 102, 0.15);
+    color: var(--warning);
+}
+
+.concern-level-badge.level-moderate-high {
+    background: rgba(255, 138, 101, 0.15);
+    color: #ff8a65;
+}
+
+.concern-level-badge.level-high {
+    background: rgba(255, 107, 107, 0.15);
+    color: var(--danger);
+}
+
+.concern-level-badge.level-critical {
+    background: rgba(220, 38, 38, 0.15);
+    color: #dc2626;
+}
+
+.concern-note {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Pollution Detection Card */
+.pollution-detection-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.pollution-detection-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.pollution-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.pollution-type-main,
+.pollution-type-secondary {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+}
+
+.type-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.type-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green);
+    margin-bottom: 6px;
+}
+
+.type-subtype {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.type-confidence {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.secondary-type-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(105, 168, 255, 0.12);
+    color: var(--blue);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 4px 4px 4px 0;
+}
+
+/* Evidence Card */
+.evidence-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.evidence-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.evidence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.evidence-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(57, 229, 140, 0.05);
+    border: 1px solid rgba(57, 229, 140, 0.15);
+    border-radius: 12px;
+}
+
+.evidence-check {
+    font-size: 18px;
+    color: var(--green);
+    flex-shrink: 0;
+}
+
+.evidence-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.evidence-note {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+/* Sources Card */
+.sources-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.sources-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.source-item {
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+}
+
+.source-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.source-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.source-confidence {
+    font-size: 12px;
+    padding: 4px 10px;
+    background: rgba(57, 229, 140, 0.12);
+    color: var(--green);
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.source-evidence {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+}
+
+.source-evidence strong {
+    color: var(--text);
+}
+
+/* Pollutants Card */
+.pollutants-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.pollutants-card h3 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.pollutants-intro {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.pollutants-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.pollutant-item {
+    padding: 10px 16px;
+    background: rgba(255, 138, 101, 0.08);
+    border: 1px solid rgba(255, 138, 101, 0.2);
+    border-radius: 10px;
+    font-size: 13px;
+    color: #ff8a65;
+    font-weight: 600;
+}
+
+.pollutants-disclaimer {
+    padding: 14px;
+    background: rgba(255, 209, 102, 0.08);
+    border: 1px solid rgba(255, 209, 102, 0.2);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--warning);
+}
+
+/* Health Impact Card */
+.health-impact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.health-impact-card h3 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.impact-summary {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
+
+.impact-section h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.impact-effects-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.impact-effects-list li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding: 10px 10px 10px 28px;
+    position: relative;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+}
+
+.impact-effects-list li:before {
+    content: "→";
+    position: absolute;
+    left: 10px;
+    color: #ff8a65;
+    font-weight: 700;
+}
+
+.impact-note {
+    padding: 14px;
+    background: rgba(105, 168, 255, 0.08);
+    border: 1px solid rgba(105, 168, 255, 0.2);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--blue);
+}
+
+/* Environmental Impact Card */
+.env-impact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.env-impact-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.env-impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.env-impact-item {
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    display: flex;
+    gap: 14px;
+}
+
+.env-impact-item.env-impact-full {
+    grid-column: 1 / -1;
+}
+
+.env-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.env-content {
+    flex: 1;
+}
+
+.env-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.env-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+}
+
+/* Pathway Card */
+.pathway-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.pathway-card h3 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.pathway-intro {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.pathway-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pathway-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
+
+.pathway-number {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(57, 229, 140, 0.15);
+    color: var(--green);
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.pathway-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding-top: 5px;
+}
+
+/* Reduction Card */
+.reduction-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.reduction-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.reduction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.reduction-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+}
+
+.reduction-number {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green);
+    color: var(--bg);
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.reduction-item p {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+    padding-top: 5px;
+}
+
+/* Prevention Card */
+.prevention-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.prevention-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.prevention-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.prevention-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(57, 229, 140, 0.05);
+    border: 1px solid rgba(57, 229, 140, 0.15);
+    border-radius: 12px;
+}
+
+.prevention-check {
+    font-size: 18px;
+    color: var(--green);
+    flex-shrink: 0;
+}
+
+.prevention-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+/* Action Priority Card */
+.action-priority-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.action-priority-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.priority-section {
+    margin-bottom: 24px;
+}
+
+.priority-section:last-child {
+    margin-bottom: 0;
+}
+
+.priority-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.priority-badge {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.badge-now {
+    background: rgba(255, 107, 107, 0.15);
+    color: var(--danger);
+}
+
+.badge-next {
+    background: rgba(255, 209, 102, 0.15);
+    color: var(--warning);
+}
+
+.badge-long {
+    background: rgba(105, 168, 255, 0.15);
+    color: var(--blue);
+}
+
+.priority-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.priority-section li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding: 12px 12px 12px 32px;
+    position: relative;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+.priority-now li:before {
+    content: "!";
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 107, 107, 0.2);
+    color: var(--danger);
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.priority-next li:before {
+    content: "→";
+    position: absolute;
+    left: 12px;
+    color: var(--warning);
+    font-weight: 700;
+}
+
+.priority-long li:before {
+    content: "◆";
+    position: absolute;
+    left: 12px;
+    color: var(--blue);
+    font-weight: 700;
+}
+
+/* Measurement Card */
+.measurement-card {
+    background: rgba(105, 168, 255, 0.08);
+    border: 1px solid rgba(105, 168, 255, 0.2);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.measurement-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.measurement-content {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.measurement-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.measurement-text {
+    flex: 1;
+}
+
+.measurement-text p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.measurement-note {
+    padding: 12px;
+    background: rgba(105, 168, 255, 0.12);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--blue);
+}
+
+/* Transparency Card */
+.transparency-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.transparency-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.transparency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.transparency-can,
+.transparency-cannot {
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.transparency-can {
+    background: rgba(57, 229, 140, 0.05);
+    border: 1px solid rgba(57, 229, 140, 0.15);
+}
+
+.transparency-cannot {
+    background: rgba(255, 107, 107, 0.05);
+    border: 1px solid rgba(255, 107, 107, 0.15);
+}
+
+.transparency-can h4,
+.transparency-cannot h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transparency-can h4 {
+    color: var(--green);
+}
+
+.transparency-cannot h4 {
+    color: var(--danger);
+}
+
+.transparency-can ul,
+.transparency-cannot ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.transparency-can li,
+.transparency-cannot li {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.transparency-can li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+}
+
+.transparency-cannot li:before {
+    content: "×";
+    position: absolute;
+    left: 0;
+    color: var(--danger);
+    font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pollution-type-grid,
+    .env-impact-grid,
+    .transparency-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .concern-ring-container {
+        width: 160px;
+        height: 160px;
+    }
+
+    .concern-number {
+        font-size: 48px;
+    }
+}
