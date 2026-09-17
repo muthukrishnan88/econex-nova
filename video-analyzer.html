@@ -833,9 +833,10 @@ function formatDisasterType(type){
         cyclone: "🌀 Cyclone/Hurricane",
         tsunami: "🌊 Tsunami",
         landslide: "⛰️ Landslide",
-        tornado: "🌪️ Tornado"
+        tornado: "🌪️ Tornado",
+        chemical_pollution: "☠️ Chemical Pollution"
     };
-    return types[type] || "🌍 " + type.charAt(0).toUpperCase() + type.slice(1);
+    return types[type] || "🌍 " + type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ');
 }
 
 function showError(message){
