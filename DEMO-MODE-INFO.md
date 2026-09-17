@@ -36,11 +36,11 @@ Scenarios cycle in order:
 - Primary: Plastic Pollution
 - Secondary: Land Pollution
 
-**Upload 4:** Industrial Air Pollution
-- Factory emissions, vehicle exhaust
-- Concern: 71/100 (Moderate-High)
-- Primary: Industrial/Vehicle Emissions
-- Secondary: (varies)
+**Upload 4:** Soil/Land Pollution (Contaminated Ground)
+- Soil contamination, waste dumping
+- Concern: 74/100 (High)
+- Primary: Land Pollution
+- Secondary: Plastic Pollution
 
 **Upload 5:** Cycles back to scenario 1 (Air Pollution)
 
